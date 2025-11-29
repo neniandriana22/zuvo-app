@@ -87,26 +87,60 @@ const COLL_REVIEWS = "reviews";
 
 // --- AUTH LISTENER (Cek Login) ---
 // --- AUTH LISTENER (Cek Login) ---
+// --- AUTH LISTENER (Cek Login & Status Blokir) ---
+// --- AUTH LISTENER (REVISI FINAL: Cek Login, Status Blokir & Anti-Crash Register) ---
 onAuthStateChanged(auth, async (user) => {
     currentUser = user;
+    
     if (user) {
+        // Ambil data profil dari Firestore
         const docRef = doc(db, COLL_USERS, user.uid);
         const docSnap = await getDoc(docRef);
+
         if (docSnap.exists()) {
             userData = docSnap.data();
-            
-            // PERBAIKAN DISINI: Tambahkan userData.photoURL ke parameter ke-4
+
+            // 1. Cek jika statusnya 'blocked'
+            if (userData.status === 'blocked') {
+                await signOut(auth);
+                userData = null;
+                alert("AKSES DITOLAK: Akun Anda telah diblokir sementara oleh Admin.\nSilakan hubungi dukungan kami.");
+                window.navigate('login');
+                return;
+            }
+
+            // Jika aman, update UI
             updateNavUI(true, userData.name, userData.role, userData.photoURL);
             
-            // Redirect otomatis logic... (biarkan kode lama kamu disini)
+            // Redirect logic (tetap sama)
             const currentView = document.querySelector('.view-section:not(.hidden)').id;
             if(currentView === 'view-login' || currentView === 'view-register') {
                 if(userData.role === 'admin') navigate('admin');
                 else if(userData.role === 'manager') navigate('manager');
                 else navigate('home');
             }
+
+        } else {
+            // --- [PERBAIKAN UTAMA DISINI] ---
+            // Cek umur akun. Jika baru dibuat < 10 detik yang lalu, JANGAN DI-KICK.
+            // Ini memberi waktu agar fungsi Register sempat menyimpan data ke Firestore.
+            const creationTime = new Date(user.metadata.creationTime).getTime();
+            const now = new Date().getTime();
+            
+            // Beri toleransi 15 detik untuk proses registrasi
+            if (now - creationTime < 15000) {
+                console.log("User baru mendaftar, menunggu data Firestore dibuat...");
+                return; // Biarkan lewat, jangan logout!
+            }
+
+            // Jika akun sudah lama TAPI datanya tidak ada, baru dianggap DIHAPUS ADMIN
+            await signOut(auth);
+            userData = null;
+            alert("AKUN TIDAK DITEMUKAN: Akun Anda telah dihapus oleh Admin.");
+            window.navigate('login');
         }
     } else {
+        // Posisi Logout
         userData = null;
         updateNavUI(false);
     }
@@ -969,176 +1003,175 @@ window.closeAdminModal = () => {
 // --- UPDATE NOMOR 4: DETAIL GENERIC (USER & MANAGER) ---
 // --- ADMIN: DETAIL POPUP (DINAMIS: BEDA TAMPILAN USER VS MANAGER) ---
 // --- ADMIN: DETAIL POPUP (DENGAN FOTO UTUH & BACKGROUND BLUR) ---
+// --- ADMIN: DETAIL POPUP (REVISI: HANDLE AKUN TERHAPUS) ---
+// --- ADMIN: DETAIL POPUP (YANG DIPERCANTIK) ---
 window.viewAdminDetailUser = async (uid, role) => {
     const modal = document.getElementById('modal-admin-detail');
+    const modalBody = modal.querySelector('.p-6');
     
-    // Kita targetkan 'body' dari modal untuk diisi HTML secara dinamis
-    // (Mencari div dengan class p-6 di dalam modal)
-    const modalBody = modal.querySelector('.p-6'); 
-    
-    // Tampilkan loading dulu
     modal.classList.remove('hidden');
     modalBody.innerHTML = '<div class="flex justify-center py-10"><i class="fa-solid fa-spinner fa-spin text-3xl text-slate-400"></i></div>';
 
     try {
-        // 1. AMBIL DATA USER (PROFIL)
+        // 1. Ambil Data User (Cek Status)
         const userSnap = await getDoc(doc(db, COLL_USERS, uid));
-        if (!userSnap.exists()) {
-            modalBody.innerHTML = '<p class="text-center text-red-500">Data user tidak ditemukan.</p>';
-            return;
+        let u = null;
+        let isDeleted = false;
+
+        if (userSnap.exists()) {
+            u = userSnap.data();
+        } else {
+            isDeleted = true;
+            u = {
+                name: "Pengelola Dihapus",
+                email: "-",
+                photoURL: null,
+                role: role || 'manager',
+                status: 'deleted',
+                createdAt: null
+            };
         }
-        const u = userSnap.data();
-        
-        // Siapkan variabel umum
-        const joinDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
-        // Foto Profil User (Prioritas: PhotoURL > Avatar Generator)
-        const userAvatar = u.photoURL || `https://ui-avatars.com/api/?name=${u.name}&background=random&size=128`;
-        
-        // Badge Status Warna-warni
-        const statusClass = u.status === 'active' ? 'bg-green-100 text-green-700' : (u.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700');
 
-
-        // ============================================================
-        // TAMPILAN 1: JIKA USER BIASA (PENGGUNA UMUM)
-        // ============================================================
-        if (role === 'user') {
-            modalBody.innerHTML = `
-                <div class="flex flex-col items-center text-center justify-center py-4">
-                    <!-- Foto Profil Besar -->
-                    <div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-sky-400 to-indigo-500 shadow-xl mb-4">
-                        <img src="${userAvatar}" class="w-full h-full rounded-full object-cover border-4 border-white bg-white">
-                    </div>
-                    
-                    <!-- Info Utama -->
-                    <h3 class="text-2xl font-bold text-slate-800">${u.name}</h3>
-                    <p class="text-slate-500 mb-2">${u.email}</p>
-                    
-                    <!-- Badge Role & Status -->
-                    <div class="flex gap-2 mb-6">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-sky-100 text-sky-700 uppercase">Pengguna Umum</span>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${statusClass}">${u.status}</span>
-                    </div>
-
-                    <!-- Detail Card -->
-                    <div class="w-full max-w-md bg-slate-50 rounded-xl border border-slate-100 p-6 text-left">
-                        <h4 class="text-sm font-bold text-slate-400 uppercase mb-4 border-b border-slate-200 pb-2">Detail Akun</h4>
-                        
-                        <div class="space-y-3">
-                            <div class="flex justify-between">
-                                <span class="text-slate-600 text-sm"><i class="fa-solid fa-id-badge w-6 text-center"></i> User ID</span>
-                                <span class="text-slate-800 text-sm font-mono bg-white px-2 rounded border border-slate-200 text-[10px]">${uid}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-600 text-sm"><i class="fa-solid fa-calendar-days w-6 text-center"></i> Bergabung</span>
-                                <span class="text-slate-800 text-sm font-medium">${joinDate}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-xs text-slate-400 mt-6 italic">Pengguna umum tidak memiliki data destinasi wisata.</p>
-                </div>
-            `;
-        } 
+        // Siapkan variabel tampilan user
+        const userAvatar = u.photoURL || `https://ui-avatars.com/api/?name=X&background=fee2e2&color=ef4444`;
         
-        // ============================================================
-        // TAMPILAN 2: JIKA MANAGER (PENGELOLA) - [DIPERBAIKI]
-        // ============================================================
-        else if (role === 'manager') {
-            // Ambil Data Wisata
+        let statusBadge = '';
+        if (isDeleted) {
+            statusBadge = '<span class="px-3 py-1 rounded-full text-xs font-bold bg-red-600 text-white uppercase shadow-sm"><i class="fa-solid fa-user-slash mr-1"></i> AKUN DIHAPUS</span>';
+        } else {
+            const statusColor = u.status === 'active' ? 'bg-green-100 text-green-700' : (u.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700');
+            statusBadge = `<span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${statusColor}">${u.status}</span>`;
+        }
+
+        // 2. Ambil Data Destinasi (Fokus Utama)
+        let destHtml = '';
+        if (role === 'manager' || isDeleted) { 
             const destSnap = await getDoc(doc(db, COLL_DESTINATIONS, uid));
-            const d = destSnap.exists() ? destSnap.data() : {};
             
-            // Siapkan Data Wisata
-            const destImg = (d.image && d.image.length > 20) ? d.image : 'https://via.placeholder.com/400x300?text=Belum+Upload+Foto';
-            const mapUrl = (d.lat && d.lng) ? `https://maps.google.com/maps?q=${d.lat},${d.lng}&z=15&output=embed` : '';
-            const contactLink = d.contact ? `<a href="tel:${d.contact}" class="font-bold text-indigo-600 hover:underline">${d.contact}</a>` : '-';
+            if (destSnap.exists()) {
+                const d = destSnap.data();
+                const destImg = (d.image && d.image.length > 20) ? d.image : 'https://via.placeholder.com/400x200?text=No+Image';
+                const mapUrl = (d.lat && d.lng) ? `https://maps.google.com/maps?q=${d.lat},${d.lng}&z=15&output=embed` : '';
 
-            modalBody.innerHTML = `
-                <div class="flex flex-col md:flex-row gap-6">
-                    <!-- KOLOM KIRI: INFO WISATA & MAPS -->
-                    <div class="w-full md:w-3/5 space-y-4">
-                        
-                        <!-- Foto Wisata (LAYOUT BARU: BLUR + CONTAIN) -->
-                        <div class="relative rounded-xl overflow-hidden shadow-md border border-slate-200 h-64 bg-slate-800 group">
-                            <!-- 1. Background Blur -->
-                            <img src="${destImg}" class="absolute inset-0 w-full h-full object-cover blur-xl opacity-60 scale-110 transition duration-700">
-                            
-                            <!-- 2. Gambar Utama (Utuh) -->
-                            <img src="${destImg}" class="relative w-full h-full object-contain z-10 p-2 transition duration-500 group-hover:scale-105">
-                            
-                            <!-- 3. Overlay Teks -->
-                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 to-transparent p-4 z-20">
-                                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded uppercase font-bold mb-1 inline-block shadow-sm">${d.category || 'Wisata'}</span>
-                                <h3 class="text-white font-bold text-lg truncate drop-shadow-md">${d.name || 'Nama Wisata Kosong'}</h3>
+                // Badge Status Wisata
+                let destStatusBadge = '';
+                if(d.status === 'active') destStatusBadge = '<span class="bg-green-500 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Tayang</span>';
+                else if(d.status === 'pending') destStatusBadge = '<span class="bg-yellow-500 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Pending</span>';
+                else destStatusBadge = '<span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Blocked</span>';
+
+                destHtml = `
+                <div class="mt-6 border-t border-slate-200 pt-6">
+                    <h4 class="text-sm font-bold text-slate-700 uppercase mb-4 flex items-center">
+                        <i class="fa-solid fa-map-location-dot mr-2 text-indigo-500"></i> Detail Wisata yang Dikelola
+                    </h4>
+
+                    <div class="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                        <!-- Hero Image Wisata -->
+                        <div class="relative h-48 bg-slate-800 group overflow-hidden">
+                            <img src="${destImg}" class="absolute inset-0 w-full h-full object-cover opacity-60 blur-sm scale-110">
+                            <img src="${destImg}" class="relative w-full h-full object-contain p-2 z-10 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute top-3 right-3 z-20">
+                                ${destStatusBadge}
+                            </div>
+                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4 z-20">
+                                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded uppercase font-bold mb-1 inline-block shadow-sm border border-white/20">${d.category || 'Umum'}</span>
+                                <h3 class="text-xl font-bold text-white leading-tight drop-shadow-md">${d.name || 'Nama Belum Diatur'}</h3>
                             </div>
                         </div>
 
-                        <!-- Deskripsi -->
-                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                            <p class="text-xs font-bold text-slate-400 uppercase mb-1">Deskripsi Wisata</p>
-                            <p class="text-sm text-slate-600 line-clamp-3 italic">"${d.description || 'Belum ada deskripsi.'}"</p>
-                        </div>
-
-                        <!-- Peta & Lokasi -->
-                        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
-                             ${mapUrl 
-                                ? `<iframe src="${mapUrl}" width="100%" height="180" style="border:0;" loading="lazy"></iframe>`
-                                : `<div class="h-32 bg-slate-100 flex flex-col items-center justify-center text-slate-400 text-xs"><i class="fa-solid fa-map-slash text-2xl mb-1"></i><p>Lokasi Peta Belum Diatur</p></div>`
-                             }
-                             <div class="p-3 bg-slate-50 border-t border-slate-200">
-                                <p class="text-xs text-slate-500"><i class="fa-solid fa-location-dot mr-1"></i> ${d.address || 'Alamat belum diisi'}</p>
-                             </div>
-                        </div>
-                    </div>
-
-                    <!-- KOLOM KANAN: PROFIL PENGELOLA -->
-                    <div class="w-full md:w-2/5 flex flex-col gap-4">
-                        
-                        <!-- KARTU PROFIL PENGELOLA -->
-                        <div class="bg-white p-5 rounded-xl border border-indigo-100 shadow-sm relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-16 h-16 bg-indigo-100 rounded-bl-full -mr-8 -mt-8 z-0"></div>
-                            
-                            <div class="relative z-10 text-center">
-                                <img src="${userAvatar}" class="w-20 h-20 rounded-full mx-auto border-4 border-indigo-50 shadow-md mb-3 object-cover">
-                                <h4 class="font-bold text-slate-800">${u.name}</h4>
-                                <p class="text-xs text-slate-500 mb-2">${u.email}</p>
-                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase ${statusClass}">${u.status}</span>
-                            </div>
-
-                            <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm">
-                                <div class="flex items-center text-slate-600">
-                                    <i class="fa-solid fa-phone w-6 text-indigo-400"></i>
-                                    <span>${contactLink}</span>
+                        <!-- Info Wisata -->
+                        <div class="p-5 space-y-4">
+                            <!-- Stats -->
+                            <div class="flex items-center gap-4 text-sm border-b border-slate-100 pb-4">
+                                <div class="flex items-center text-yellow-600 font-bold bg-yellow-50 px-2 py-1 rounded border border-yellow-100">
+                                    <i class="fa-solid fa-star mr-1"></i> ${d.rating?.toFixed(1) || 0}
                                 </div>
-                                <div class="flex items-center text-slate-600">
-                                    <i class="fa-solid fa-calendar w-6 text-indigo-400"></i>
-                                    <span class="text-xs">Join: ${joinDate}</span>
+                                <div class="text-slate-500 text-xs font-medium">
+                                    <i class="fa-solid fa-comment mr-1"></i> ${d.reviewCount || 0} Ulasan
+                                </div>
+                                <div class="text-slate-500 ml-auto text-xs">
+                                    Status Data: ${d.isSetup ? '<span class="text-green-600 font-bold"><i class="fa-solid fa-check-circle mr-1"></i>Lengkap</span>' : '<span class="text-red-500 font-bold"><i class="fa-solid fa-circle-xmark mr-1"></i>Belum Setup</span>'}
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- STATUS KELENGKAPAN -->
-                        <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-100">
-                            <h5 class="text-xs font-bold text-yellow-700 uppercase mb-2">Status Data</h5>
-                            <ul class="space-y-1 text-xs text-slate-700">
-                                <li class="flex items-center">
-                                    <i class="fa-solid ${d.isSetup ? 'fa-check-circle text-green-500' : 'fa-circle-xmark text-red-500'} w-5"></i> 
-                                    Setup Awal: <b>${d.isSetup ? 'Sudah' : 'Belum'}</b>
-                                </li>
-                                <li class="flex items-center">
-                                    <i class="fa-solid ${d.lat ? 'fa-check-circle text-green-500' : 'fa-circle-xmark text-red-500'} w-5"></i> 
-                                    Titik Peta: <b>${d.lat ? 'Ada' : 'Kosong'}</b>
-                                </li>
-                            </ul>
-                        </div>
+                            <!-- Deskripsi -->
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-wider">Deskripsi</p>
+                                <div class="text-sm text-slate-600 italic bg-slate-50 p-3 rounded-lg border border-slate-100 relative">
+                                    <i class="fa-solid fa-quote-left absolute top-2 left-2 text-slate-200 text-xl"></i>
+                                    <p class="relative z-10 pl-4 line-clamp-3 leading-relaxed">"${d.description || 'Tidak ada deskripsi.'}"</p>
+                                </div>
+                            </div>
 
+                            <!-- Lokasi & Kontak -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-wider">Lokasi</p>
+                                    <p class="text-sm text-slate-700 flex items-start gap-2 mb-2">
+                                        <i class="fa-solid fa-location-dot mt-1 text-red-400"></i>
+                                        <span class="line-clamp-2">${d.address || '-'}</span>
+                                    </p>
+                                    ${mapUrl ? `<div class="h-24 rounded-lg overflow-hidden border border-slate-200 shadow-sm"><iframe src="${mapUrl}" width="100%" height="100%" style="border:0;" loading="lazy"></iframe></div>` : '<div class="h-24 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400 border border-dashed border-slate-300">Peta tidak tersedia</div>'}
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-wider">Kontak Pengelola</p>
+                                    <div class="text-sm text-slate-700 bg-indigo-50/50 p-3 rounded-lg border border-indigo-100">
+                                        <p class="mb-2 flex items-center gap-2">
+                                            <span class="w-6 h-6 rounded-full bg-white flex items-center justify-center text-indigo-500 shadow-sm"><i class="fa-solid fa-phone text-xs"></i></span> 
+                                            ${d.contact ? `<span class="font-medium">${d.contact}</span>` : '<span class="text-red-500 italic font-bold text-xs bg-white px-2 py-0.5 rounded border border-red-100">Tidak ada (User Dihapus)</span>'}
+                                        </p>
+                                        <p class="flex items-center gap-2">
+                                            <span class="w-6 h-6 rounded-full bg-white flex items-center justify-center text-indigo-500 shadow-sm"><i class="fa-solid fa-user text-xs"></i></span> 
+                                            <span class="truncate">${u.name}</span>
+                                        </p>
+                                    </div>
+                                    ${isDeleted ? `<div class="mt-2 text-[10px] text-red-600 bg-red-50 p-2 rounded border border-red-100 flex items-start gap-2">
+                                        <i class="fa-solid fa-triangle-exclamation mt-0.5"></i> 
+                                        <span><b>Perhatian:</b> Akun pengelola asli sudah dihapus. Wisata ini berjalan tanpa pemilik akun (Yatim Piatu).</span>
+                                    </div>` : ''}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            `;
+                `;
+            } else {
+                 destHtml = `<div class="mt-6 p-6 bg-slate-50 rounded-xl text-center text-slate-400 italic text-sm border border-dashed border-slate-200">
+                    <i class="fa-solid fa-folder-open text-2xl mb-2 opacity-50"></i><br>
+                    Belum ada data wisata yang dibuat.
+                 </div>`;
+            }
         }
+
+        // --- RENDER MODAL UTAMA ---
+        modalBody.innerHTML = `
+            <div>
+                <!-- Header Profil -->
+                <div class="flex items-center gap-5 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <div class="relative shrink-0">
+                        <img src="${userAvatar}" class="w-16 h-16 rounded-full object-cover border-4 ${isDeleted ? 'border-red-100 grayscale' : 'border-white shadow-md'}">
+                        ${isDeleted ? '<div class="absolute -bottom-1 -right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs border-2 border-white shadow-sm"><i class="fa-solid fa-xmark"></i></div>' : ''}
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-xl font-bold ${isDeleted ? 'text-slate-400 line-through decoration-2 decoration-red-300' : 'text-slate-800'}">${u.name}</h3>
+                        <p class="text-sm text-slate-500 font-mono flex items-center gap-2">
+                            <i class="fa-solid fa-envelope opacity-50"></i> ${u.email}
+                        </p>
+                        <div class="mt-2 flex flex-wrap gap-2 items-center">
+                            ${statusBadge}
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-white text-slate-500 border border-slate-200 uppercase font-mono tracking-tight shadow-sm">ID: ${uid.substring(0,8)}...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Konten Wisata -->
+                ${destHtml}
+            </div>
+        `;
 
     } catch (err) {
         console.error(err);
-        modalBody.innerHTML = `<p class="text-red-500 text-center">Terjadi kesalahan: ${err.message}</p>`;
+        modalBody.innerHTML = `<p class="text-red-500 text-center bg-red-50 p-4 rounded-lg border border-red-100">Gagal memuat detail: ${err.message}</p>`;
     }
 };
 
@@ -1201,6 +1234,8 @@ document.getElementById('admin-search-input').addEventListener('input', () => {
 });
 
 // --- RENDER TABEL WISATA (FULL COLUMN + SCROLL, DENGAN JARAK AMAN) ---
+// ... (Kode fungsi lainnya tetap sama, TIMPA fungsi renderAdminDestinations dengan yang ini) ...
+
 async function renderAdminDestinations() {
     const tbody = document.getElementById('admin-dest-list');
     const searchInput = document.getElementById('admin-search-input').value.toLowerCase();
@@ -1209,28 +1244,51 @@ async function renderAdminDestinations() {
     tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center"><i class="fa-solid fa-spinner fa-spin text-emerald-500 text-xl"></i></td></tr>';
     
     try {
+        // Ambil data terbaru
         const snapDest = await getDocs(collection(db, COLL_DESTINATIONS));
         const snapUsers = await getDocs(collection(db, COLL_USERS));
         
-        const userMap = {}; const userStatusMap = {};
-        snapUsers.forEach(u => { const d = u.data(); userMap[u.id] = d.name; userStatusMap[u.id] = d.status; });
+        // Buat Map User: ID -> Nama
+        const userMap = {}; 
+        snapUsers.forEach(u => { 
+            const d = u.data(); 
+            userMap[u.id] = d.name; 
+        });
 
-        let html = ''; let found = false;
+        let html = ''; 
+        let found = false;
 
         snapDest.forEach(doc => {
             const d = doc.data(); 
             const destId = doc.id;
-            const managerName = userMap[d.managerId] || 'Unknown';
             
-            if (searchInput && !d.name.toLowerCase().includes(searchInput) && !managerName.toLowerCase().includes(searchInput)) return;
+            // 1. Cek Nama Pengelola (Handle jika user sudah dihapus)
+            // Jika ID tidak ditemukan di userMap, tampilkan 'Tanpa Pengelola'
+            const managerNameRaw = userMap[d.managerId];
+            const managerName = managerNameRaw || '<span class="text-slate-400 italic font-normal">Tanpa Pengelola</span>';
+            const managerIdDisplay = managerNameRaw ? d.managerId.substring(0,6)+'...' : '-';
+            
+            // Filter Pencarian (Gunakan nama raw agar tag HTML tidak ikut dicari)
+            const searchTarget = (d.name || '') + ' ' + (managerNameRaw || 'Tanpa Pengelola');
+
+            if (searchInput && !searchTarget.toLowerCase().includes(searchInput)) return;
             if (filterCategory !== 'all' && d.category !== filterCategory) return;
             
             found = true;
             const imgSrc = (d.image && d.image.length > 20) ? d.image : 'https://via.placeholder.com/150?text=No+Img';
             
-            const statusBadge = userStatusMap[d.managerId] === 'active' 
-                ? '<span class="inline-flex items-center text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold uppercase border border-green-200"><span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span> Tayang</span>' 
-                : '<span class="inline-flex items-center text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-bold uppercase border border-yellow-200"><span class="inline-block w-1.5 h-1.5 rounded-full bg-yellow-500 mr-1.5"></span> Pending</span>';
+            // 2. LOGIKA STATUS (DIPERBAIKI)
+            // Cek langsung ke d.status (Data Wisata), JANGAN cek ke userStatusMap
+            let statusBadge = '';
+            if (d.status === 'active') {
+                statusBadge = '<span class="inline-flex items-center text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold uppercase border border-green-200"><span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span> Tayang</span>';
+            } else if (d.status === 'pending') {
+                statusBadge = '<span class="inline-flex items-center text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-bold uppercase border border-yellow-200"><span class="inline-block w-1.5 h-1.5 rounded-full bg-yellow-500 mr-1.5"></span> Pending</span>';
+            } else if (d.status === 'blocked') {
+                statusBadge = '<span class="inline-flex items-center text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold uppercase border border-red-200"><span class="inline-block w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span> Diblokir</span>';
+            } else {
+                statusBadge = '<span class="inline-flex items-center text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold uppercase border border-slate-200">Non-Aktif</span>';
+            }
 
             html += `
             <tr class="hover:bg-emerald-50/30 transition duration-150 ease-in-out group border-b border-slate-100">
@@ -1239,19 +1297,17 @@ async function renderAdminDestinations() {
                 <td class="px-6 py-4">
                     <div class="flex items-start gap-4">
                         <img src="${imgSrc}" class="w-14 h-14 rounded-lg object-cover border border-slate-200 shadow-sm bg-white shrink-0">
-                        <div class="pt-0.5"> <!-- Menambahkan sedikit padding atas agar nama sejajar -->
+                        <div class="pt-0.5">
                             <div class="font-bold text-slate-800 text-sm mb-1 line-clamp-1">${d.name || 'Tanpa Nama'}</div>
                             <div class="flex items-center gap-3 text-xs text-slate-500">
                                 ${statusBadge}
-                                <!-- MENGHAPUS LOGIKA MOBILE STACKING DI SINI -->
                             </div>
                         </div>
                     </div>
                 </td>
                 
-                <!-- KOLOM 2: KATEGORI (FIX: Tambahkan margin aman di dalam badge) -->
+                <!-- KOLOM 2: KATEGORI -->
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <!-- Badge Kategori: Selalu Tampil di kolomnya sendiri -->
                     <span class="inline-flex items-center px-3 py-1 rounded text-xs font-medium bg-white border border-slate-200 text-slate-700 shadow-sm">
                         ${d.category || '-'}
                     </span>
@@ -1259,8 +1315,10 @@ async function renderAdminDestinations() {
 
                 <!-- KOLOM 3: PENGELOLA -->
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-bold text-indigo-600 hover:underline cursor-pointer" onclick="window.viewAdminDetailUser('${d.managerId}', 'manager')">${managerName}</div>
-                    <div class="text-[10px] text-slate-400 font-mono mt-0.5">ID: ${d.managerId.substring(0,6)}...</div>
+                    <div class="text-sm font-bold text-indigo-600 hover:underline cursor-pointer" onclick="window.viewAdminDetailUser('${d.managerId}', 'manager')">
+                        ${managerName}
+                    </div>
+                    <div class="text-[10px] text-slate-400 font-mono mt-0.5">ID: ${managerIdDisplay}</div>
                 </td>
 
                 <!-- KOLOM 4: RATING -->
@@ -1493,29 +1551,52 @@ window.updateUserStatus = async (uid, status) => {
         }
     }
 };
+// --- ADMIN: HAPUS USER (REVISI: BERSIH TOTAL BESERTA WISATA) ---
+// --- ADMIN: HAPUS USER (REVISI FINAL: WISATA TETAP TAYANG) ---
 window.deleteUser = async (uid) => {
-    if(!confirm("ANDA YAKIN? Menghapus user akan menghapus semua data profil dan postingan (jika ada). PENGELOLA HARUS DIHAPUS DARI FIREBASE CONSOLE SECARA MANUAL AGAR BISA DAFTAR ULANG.")) return;
+    if(!confirm("PERINGATAN: Menghapus User akan:\n1. Menghapus akses login & profil Manager.\n2. Menghapus semua ulasan yang ditulis orang ini.\n3. NAMUN WISATA TETAP TAYANG (Tanpa kontak).\n\nLanjutkan?")) return;
     
+    document.body.style.cursor = 'wait';
+
     try {
-        // 1. Hapus dokumen user (Profil)
+        // 1. Hapus User Profil (Supaya gak bisa login/daftar)
         await deleteDoc(doc(db, COLL_USERS, uid));
         
-        // 2. Jika pengelola, hapus destinasi
-        await deleteDoc(doc(db, COLL_DESTINATIONS, uid)).catch(e => console.log("No destination to delete."));
+        // 2. [PERBAIKAN DISINI] JANGAN HAPUS WISATA, TAPI UPDATE SAJA
+        const destRef = doc(db, COLL_DESTINATIONS, uid);
+        const destSnap = await getDoc(destRef);
+
+        if (destSnap.exists()) {
+            // Kita kosongkan kontak dan beri tanda
+            await updateDoc(destRef, {
+                contact: "", // Hapus nomor HP
+                managerName: "Tanpa Pengelola", // Opsional: Penanda
+                // Status TETAP 'active' agar tetap tayang di home
+            });
+        }
         
-        // 3. Hapus semua ulasan yang dibuat user ini
+        // 3. Hapus Semua Ulasan yang ditulis oleh User ini (di tempat lain)
         const qReviews = query(collection(db, COLL_REVIEWS), where("userId", "==", uid));
         const snapReviews = await getDocs(qReviews);
-        snapReviews.forEach(d => deleteDoc(doc(db, COLL_REVIEWS, d.id)));
+        const deletePromises = snapReviews.docs.map(d => deleteDoc(doc(db, COLL_REVIEWS, d.id)));
+        await Promise.all(deletePromises);
 
-        showToast("Akun dan semua data terkait berhasil dihapus.");
+        showToast("Akun Pengelola dihapus. Wisata tetap tayang tanpa kontak.");
         
-        // MEMBERIKAN PETUNJUK HAPUS AUTH MANUAL
-        alert("PERHATIAN: Untuk mengizinkan user mendaftar ulang dengan email yang sama, ADMIN HARUS MENGHAPUS AKUN INI SECARA MANUAL DI FIREBASE CONSOLE > AUTHENTICATION.");
-
+        // 4. Refresh Tabel Admin
         renderAdminUsers(); 
+        
+        // 5. Refresh Tabel Destinasi (jika sedang terbuka)
+        const viewAdmDest = document.getElementById('admin-view-destinations');
+        if (viewAdmDest && !viewAdmDest.classList.contains('hidden')) {
+            renderAdminDestinations();
+        }
+
     } catch(err) {
-        alert("Gagal menghapus user: " + err.message);
+        console.error(err);
+        alert("Terjadi kesalahan: " + err.message);
+    } finally {
+        document.body.style.cursor = 'default';
     }
 };
 
