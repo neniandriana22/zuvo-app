@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- NAVIGATION SYSTEM ---
 // Membuat fungsi navigate tersedia secara global untuk tombol HTML
+// --- NAVIGATION SYSTEM ---
 window.navigate = (viewId) => {
     document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
     const target = document.getElementById(`view-${viewId}`);
@@ -173,6 +174,9 @@ window.navigate = (viewId) => {
         if(viewId === 'home') renderDestinations();
         if(viewId === 'admin' && userData?.role === 'admin') renderAdminUsers();
         if(viewId === 'manager' && userData?.role === 'manager') loadManagerData();
+        if(viewId === 'profile') loadUserProfile();
+        
+        // Tidak perlu logika khusus untuk 'docs' karena hanya konten statis HTML
     }
 };
 
@@ -418,17 +422,53 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
     }
 });
 
+// ... (Kode sebelumnya)
+
 document.getElementById('form-login').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-password').value;
+    
+    // UI Loading (Tidak merubah fungsi utama, hanya UX)
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memuat...';
+    btn.disabled = true;
+
     try {
-        await signInWithEmailAndPassword(auth, email, pass);
+        // 1. Login dulu ke Firebase Auth (Cek Email & Password)
+        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+        const user = userCredential.user;
+        
+        // --- LOGIKA UTAMA: CEK STATUS SEBELUM NOTIF ---
+        // Kita intip dulu datanya di Database. 
+        const docRef = doc(db, COLL_USERS, user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+            const uData = docSnap.data();
+            // Jika statusnya 'blocked', BERHENTI DI SINI.
+            if (uData.status === 'blocked') {
+                // Return akan menghentikan fungsi, jadi baris showToast di bawah TIDAK AKAN DIJALANKAN.
+                // Nanti sistem 'onAuthStateChanged' yang akan menangani alert "Akses Ditolak" & logout paksa.
+                return; 
+            }
+        }
+        // ----------------------------------------------
+
+        // 3. Jika aman (tidak diblokir/return), baru munculkan notifikasi sukses
         showToast("Login Berhasil");
+        
     } catch (err) {
         showToast(err.message, 'error');
+    } finally {
+        // Reset tombol kembali normal
+        btn.innerHTML = originalText;
+        btn.disabled = false;
     }
 });
+
+// ... (Kode selanjutnya)
 
 // --- FITUR LUPA PASSWORD ---
 
@@ -2062,6 +2102,20 @@ async function loadManagerReviews(uid) {
         list.innerHTML = '<p class="text-red-400 text-sm text-center">Gagal memuat ulasan.</p>';
     }
 }
+
+// Smooth Scroll untuk Navigasi Dokumentasi
+document.querySelectorAll('#view-docs a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+            targetEl.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    });
+});
 
 // ... (Kode selanjutnya) ...
 

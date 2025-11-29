@@ -753,14 +753,207 @@
         </div>
     </div>
 </section>
+
+<!-- VIEW 8: DOKUMENTASI PENGGUNA (BARU) -->
+<section id="view-docs" class="view-section hidden">
+    <div class="flex flex-col lg:flex-row gap-8 items-start">
+        
+        <!-- SIDEBAR NAVIGASI (Sticky) -->
+        <div class="w-full lg:w-64 bg-white p-4 rounded-xl shadow-sm border border-slate-100 lg:sticky lg:top-24 shrink-0">
+            <h3 class="font-bold text-slate-800 mb-4 px-2 border-b border-slate-100 pb-2">Daftar Isi</h3>
+            <ul class="space-y-1 text-sm">
+                <li><a href="#doc-intro" class="block px-3 py-2 rounded-lg hover:bg-sky-50 hover:text-sky-600 text-slate-600 transition">👋 Pendahuluan</a></li>
+                <li><a href="#doc-user" class="block px-3 py-2 rounded-lg hover:bg-sky-50 hover:text-sky-600 text-slate-600 transition">👤 Untuk Pengunjung</a></li>
+                <li><a href="#doc-manager" class="block px-3 py-2 rounded-lg hover:bg-sky-50 hover:text-sky-600 text-slate-600 transition">👔 Untuk Pengelola</a></li>
+                <li><a href="#doc-admin" class="block px-3 py-2 rounded-lg hover:bg-sky-50 hover:text-sky-600 text-slate-600 transition">🛡️ Untuk Admin</a></li>
+                <li><a href="#doc-faq" class="block px-3 py-2 rounded-lg hover:bg-sky-50 hover:text-sky-600 text-slate-600 transition">❓ Masalah Umum (FAQ)</a></li>
+            </ul>
+            <button onclick="window.navigate('home')" class="mt-6 w-full py-2 border border-slate-200 rounded-lg text-xs font-bold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Beranda
+            </button>
+        </div>
+
+        <!-- KONTEN DOKUMENTASI -->
+        <div class="flex-1 bg-white p-8 rounded-xl shadow-sm border border-slate-100 min-h-screen">
+            
+            <!-- Header Docs -->
+            <div class="text-center mb-10 border-b border-slate-100 pb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-sky-100 text-sky-600 rounded-full mb-4">
+                    <i class="fa-solid fa-book-open text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-slate-800 mb-2">Pusat Bantuan ZUVO</h1>
+                <p class="text-slate-500">Panduan lengkap penggunaan sistem informasi wisata.</p>
+            </div>
+
+            <!-- 1. Pendahuluan -->
+            <div id="doc-intro" class="mb-12 scroll-mt-24">
+                <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="w-8 h-8 rounded bg-slate-800 text-white flex items-center justify-center mr-3 text-sm">1</span> 
+                    Pendahuluan
+                </h2>
+                <div class="prose text-slate-600 text-sm leading-relaxed space-y-3 text-justify">
+                    <p>Selamat datang di <b>ZUVO</b>, platform yang menghubungkan pencinta wisata dengan destinasi terbaik di Jambi. Aplikasi ini dirancang untuk memudahkan tiga jenis pengguna:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li><b>Pengunjung (User):</b> Mencari wisata, melihat lokasi, dan memberikan ulasan.</li>
+                        <li><b>Pengelola (Manager):</b> Mempromosikan wisata, mengelola informasi, dan berinteraksi dengan pengunjung.</li>
+                        <li><b>Administrator:</b> Menjaga keamanan dan kualitas konten dalam aplikasi.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2. Panduan User -->
+            <div id="doc-user" class="mb-12 scroll-mt-24">
+                <h2 class="text-xl font-bold text-sky-600 mb-4 flex items-center">
+                    <span class="w-8 h-8 rounded bg-sky-600 text-white flex items-center justify-center mr-3 text-sm"><i class="fa-solid fa-user"></i></span> 
+                    Panduan Pengunjung
+                </h2>
+                <div class="space-y-6">
+                    <div class="bg-sky-50 p-4 rounded-lg border border-sky-100">
+                        <h3 class="font-bold text-sky-800 mb-2 text-sm">🔍 Mencari Wisata</h3>
+                        <p class="text-xs text-sky-700">Anda dapat mencari wisata di halaman <b>Beranda</b> tanpa harus login. Gunakan kolom pencarian atau filter kategori (Alam, Kuliner, Sejarah) untuk menemukan tempat yang diinginkan.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-2 text-sm">📝 Memberikan Ulasan</h3>
+                        <ol class="list-decimal pl-5 text-sm text-slate-600 space-y-2">
+                            <li>Pilih salah satu wisata untuk melihat <b>Detail</b>.</li>
+                            <li>Gulir ke bawah hingga bagian "Ulasan & Rating".</li>
+                            <li>Pastikan Anda sudah <b>Login</b> (Anda tidak bisa menulis ulasan sebagai tamu).</li>
+                            <li>Pilih jumlah Bintang (1-5) dan tulis pengalaman Anda.</li>
+                            <li>Klik tombol <b>Kirim Ulasan</b>.</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-2 text-sm">✏️ Mengedit Profil</h3>
+                        <p class="text-sm text-slate-600">Klik foto profil Anda di pojok kanan atas navbar, lalu pilih profil untuk mengubah Nama atau Foto Profil Anda.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Panduan Manager -->
+            <div id="doc-manager" class="mb-12 scroll-mt-24">
+                <h2 class="text-xl font-bold text-indigo-600 mb-4 flex items-center">
+                    <span class="w-8 h-8 rounded bg-indigo-600 text-white flex items-center justify-center mr-3 text-sm"><i class="fa-solid fa-user-tie"></i></span> 
+                    Panduan Pengelola
+                </h2>
+                <div class="space-y-6">
+                    <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                        <h3 class="font-bold text-indigo-800 mb-2 text-sm">🚀 Mendaftar & Verifikasi</h3>
+                        <p class="text-xs text-indigo-700 mb-2">Saat mendaftar, pilih peran sebagai <b>Pengelola</b>. Anda wajib mengisi Nama Wisata, Kontak, dan Alamat.</p>
+                        <div class="bg-white p-2 rounded text-xs text-indigo-600 border border-indigo-200">
+                            <i class="fa-solid fa-circle-info mr-1"></i> <b>Penting:</b> Setelah mendaftar, akun Anda berstatus <b>PENDING</b>. Anda tidak bisa login hingga Admin menyetujui akun Anda.
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-2 text-sm">🛠️ Mengatur Informasi Wisata</h3>
+                        <p class="text-sm text-slate-600 mb-2">Setelah login, masuk ke menu <b>Dashboard</b>. Di tab "Kelola Destinasi", Anda WAJIB melengkapi:</p>
+                        <ul class="list-disc pl-5 text-sm text-slate-600 mb-2">
+                            <li>Foto Utama Wisata.</li>
+                            <li>Koordinat Peta (Latitude & Longitude dari Google Maps).</li>
+                            <li>Deskripsi lengkap wisata.</li>
+                        </ul>
+                        <p class="text-xs text-slate-400 italic">Wisata tidak akan tampil optimal di halaman depan jika data belum lengkap.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-2 text-sm">💬 Membalas Ulasan</h3>
+                        <p class="text-sm text-slate-600">Di Dashboard, klik tab <b>Ulasan Masuk</b>. Anda dapat membalas komentar pengunjung untuk meningkatkan kredibilitas wisata Anda.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Panduan Admin -->
+            <div id="doc-admin" class="mb-12 scroll-mt-24">
+                <h2 class="text-xl font-bold text-purple-600 mb-4 flex items-center">
+                    <span class="w-8 h-8 rounded bg-purple-600 text-white flex items-center justify-center mr-3 text-sm"><i class="fa-solid fa-shield-halved"></i></span> 
+                    Panduan Admin
+                </h2>
+                <div class="border border-slate-200 rounded-xl overflow-hidden">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">Fitur</th>
+                                <th class="p-3">Fungsi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-600">
+                            <tr>
+                                <td class="p-3 font-medium">Verifikasi Akun</td>
+                                <td class="p-3">Menyetujui (Approve) pendaftaran Pengelola baru agar wisata mereka bisa tayang.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">Blokir User</td>
+                                <td class="p-3">Membekukan akses login pengguna yang melanggar aturan. Wisata mereka juga akan otomatis non-aktif.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">Hapus User</td>
+                                <td class="p-3">
+                                    Menghapus akun secara permanen. 
+                                    <br><span class="text-xs text-red-500">*Wisata tetap ada tapi status "Tanpa Pengelola".</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">Hapus Wisata</td>
+                                <td class="p-3">Mereset data wisata milik pengelola (menghapus foto, deskripsi, dan semua ulasan) tanpa menghapus akun pengelolanya.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5. FAQ -->
+            <div id="doc-faq" class="scroll-mt-24">
+                <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                    <span class="w-8 h-8 rounded bg-yellow-500 text-white flex items-center justify-center mr-3 text-sm"><i class="fa-solid fa-question"></i></span> 
+                    Masalah Umum (FAQ)
+                </h2>
+                <div class="space-y-4">
+                    <details class="group bg-white border border-slate-200 rounded-lg open:ring-2 open:ring-sky-100">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-4 text-slate-700 hover:bg-slate-50 transition">
+                            <span>Saya lupa password akun saya</span>
+                            <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                        </summary>
+                        <div class="text-slate-600 text-sm p-4 pt-0 leading-relaxed border-t border-slate-100 mt-2">
+                            Gunakan fitur <b>Lupa Password</b> di halaman Login. Masukkan email yang terdaftar, dan sistem akan mengirimkan tautan reset password ke email Anda. Cek juga folder Spam jika email tidak masuk.
+                        </div>
+                    </details>
+
+                    <details class="group bg-white border border-slate-200 rounded-lg open:ring-2 open:ring-sky-100">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-4 text-slate-700 hover:bg-slate-50 transition">
+                            <span>Kenapa saya tidak bisa login setelah daftar sebagai Pengelola?</span>
+                            <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                        </summary>
+                        <div class="text-slate-600 text-sm p-4 pt-0 leading-relaxed border-t border-slate-100 mt-2">
+                            Akun Pengelola memerlukan verifikasi manual dari Admin untuk menjaga kualitas wisata. Harap tunggu 1x24 jam. Jika masih belum bisa, hubungi Admin.
+                        </div>
+                    </details>
+
+                    <details class="group bg-white border border-slate-200 rounded-lg open:ring-2 open:ring-sky-100">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-4 text-slate-700 hover:bg-slate-50 transition">
+                            <span>Bagaimana cara mendapatkan koordinat peta?</span>
+                            <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                        </summary>
+                        <div class="text-slate-600 text-sm p-4 pt-0 leading-relaxed border-t border-slate-100 mt-2">
+                            Buka Google Maps, cari lokasi wisata Anda. <b>Klik kanan</b> pada titik lokasi tersebut, lalu klik pada angka koordinat yang muncul (contoh: -1.6102, 103.6123) untuk menyalinnya. Tempelkan angka tersebut ke kolom Latitude dan Longitude di Dashboard.
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gradient-to-r from-sky-500 to-blue-700 text-white py-4 fixed bottom-0 left-0 w-full z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-    <div class="max-w-7xl mx-auto px-4 flex justify-center items-center h-full">
+<footer class="bg-gradient-to-r from-sky-500 to-blue-700 text-white py-4 fixed bottom-0 left-0 w-full z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-full">
         <p class="text-xs md:text-sm font-medium opacity-90 tracking-wide">
             © 2025 Zuvo Project.
         </p>
+        <!-- Tombol Buka Panduan -->
+        <button onclick="window.navigate('docs')" class="text-xs md:text-sm font-bold hover:text-yellow-300 transition flex items-center gap-1">
+            <i class="fa-solid fa-circle-question"></i> Panduan Pengguna
+        </button>
     </div>
 </footer>
 
