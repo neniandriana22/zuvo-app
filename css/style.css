@@ -1,0 +1,37 @@
+/* Menggunakan Font Poppins */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8fafc;
+}
+
+/* Utility untuk menyembunyikan elemen (penting untuk SPA) */
+.hidden {
+    display: none !important;
+}
+
+/* Tab Aktif di Dashboard Manager */
+.active-tab {
+    border-bottom: 2px solid #0ea5e9;
+    color: #0ea5e9;
+    font-weight: 600;
+}
+
+/* Scrollbar Kustom agar lebih cantik */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Efek Hover pada baris tabel */
+tr.hover\:bg-slate-50:hover {
+    background-color: #f8fafc;
+}
