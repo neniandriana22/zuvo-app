@@ -1610,7 +1610,7 @@ document.getElementById('form-update-profile').addEventListener('submit', async 
         // Jika ada upload foto baru
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
-            if(file.size > 500 * 1024) throw new Error("Ukuran foto maksimal 1000KB");
+            if(file.size > 500 * 1024) throw new Error("Ukuran foto maksimal 500KB");
             
             // Convert ke Base64 (Fungsi convertToBase64 sudah ada di kode sebelumnya)
             const base64 = await convertToBase64(file);
@@ -1820,7 +1820,7 @@ document.getElementById('form-update-dest').addEventListener('submit', async (e)
             const file = fileInput.files[0];
             
             // Cek ukuran lagi untuk keamanan
-            if(file.size > 1000 * 2048) {
+            if(file.size > 500 * 1024) {
                 throw new Error("Ukuran foto terlalu besar! Maksimal 500KB.");
             }
 
