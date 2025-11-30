@@ -1,4 +1,4 @@
-# ZUVO - Jelajahi Keindahan Dunia
+# ZUVO - Jelajahi Keindahan Jambi
 
 Final Project Mata Kuliah Rekayasa Perangkat Lunak
 # Identitas Proyek
@@ -52,18 +52,22 @@ Aplikasi akan berjalan otomatis di browser (biasanya di http://127.0.0.1:5500).
 # Akun Demo
 Gunakan kredensial berikut untuk menguji fitur berdasarkan hak akses:
 1. Administrator
-email    : neniandriana.uinstsjambi@gmail.com
+email    : neni@gmail.com
 Password : Neni12345-
 Hak Akses: Validasi akun pengelola, manajemen data master, hapus konten ilegal.
 2. Manager (Pengelola Wisata)
-email    : meri.andriani000@gmail.com
+email    : meri@gmail.com
 Password : Meri12345-
 Hak Akses: Manajemen profil wisata, update informasi lokasi, merespon ulasan.
 3. Manager (Pengelola Wisata)
 email    : eka@gmail.com
 Password : Eka12345-
 Hak Akses: Manajemen profil wisata, update informasi lokasi, merespon ulasan.
-4. User (Pengguna Umum)
+4. Manager (Pengelola Wisata)
+email    : fadhli@gmail.com
+Password : Eka12345-
+Hak Akses: Manajemen profil wisata, update informasi lokasi, merespon ulasan.
+5. User (Pengguna Umum)
 email    : tiya@gmail.com
 Password : Tiya12345-
 Hak Akses: Eksplorasi wisata, memberikan rating & ulasan, edit profil pribadi.
@@ -71,14 +75,15 @@ Hak Akses: Eksplorasi wisata, memberikan rating & ulasan, edit profil pribadi.
 # Link Deployment / Link APK / Link Demo Video
 Berikut adalah tautan untuk mengakses aplikasi secara langsung atau melihat demonstrasi penggunaan:
 1. Link Website (Deployment): [Masukkan Link Vercel/Netlify/Hosting Disini]
-2. Video Demo Aplikasi: [Masukkan Link YouTube/Google Drive Disini]
+2. Link Repository Github : 
+2. Video Demo Aplikasi: 
 
 # Tangkapan Layar (Screenshot)
 
 Berikut adalah tampilan antarmuka utama aplikasi ZUVO:
 Gambar 1: Talaman Beranda (Home)
 
-
+![alt text](img/Beranda.png)
 
 # Catatan: Pengguna baru dapat mendaftar melalui menu registrasi. Akun dengan role Manager memerlukan persetujuan Admin sebelum dapat beroperasi.
 
