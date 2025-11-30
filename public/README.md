@@ -74,8 +74,8 @@ Hak Akses: Eksplorasi wisata, memberikan rating & ulasan, edit profil pribadi.
 
 # Link Deployment / Link APK / Link Demo Video
 Berikut adalah tautan untuk mengakses aplikasi secara langsung atau melihat demonstrasi penggunaan:
-1. Link Website (Deployment): [Masukkan Link Vercel/Netlify/Hosting Disini]
-2. Link Repository Github : 
+1. Link Website (Deployment): https://zuvo-app-121a4.web.app
+2. Link Repository Github Neni Andriana : https://github.com/neniandriana22/zuvo-app.git
 2. Video Demo Aplikasi: 
 
 # Tangkapan Layar (Screenshot)
