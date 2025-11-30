@@ -756,8 +756,22 @@ async function renderDestinations() {
             </div>`;
         });
         
-        if (destinations.length === 0) {
-            list.innerHTML = '<div class="col-span-full text-center text-slate-400 py-10 bg-slate-50 rounded-xl border border-dashed border-slate-200 italic">Tidak ada destinasi yang ditemukan.</div>';
+         if (destinations.length === 0) {
+            list.innerHTML = `
+            <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                <div class="bg-sky-50 p-8 rounded-full mb-6 animate-bounce shadow-sm border border-sky-100">
+                    <i class="fa-solid fa-plane-slash text-6xl text-sky-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800 mb-3">Yah, Destinasi Tidak Ditemukan</h3>
+                <p class="text-slate-500 max-w-md mx-auto mb-8 leading-relaxed">
+                    Kami tidak menemukan wisata dengan kata kunci atau kategori tersebut. Coba cari kata lain atau jelajahi semua kategori.
+                </p>
+                <button onclick="document.getElementById('search-input').value=''; document.getElementById('filter-category').value='all'; renderDestinations();" 
+                        class="px-8 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-full font-bold hover:bg-sky-50 hover:text-sky-600 hover:border-sky-200 transition shadow-sm transform hover:-translate-y-1">
+                    <i class="fa-solid fa-rotate-right mr-2"></i> Reset Pencarian
+                </button>
+            </div>
+            `;
         } else {
             list.innerHTML = html;
         }
@@ -1423,14 +1437,6 @@ window.adminDeleteDestination = async (destId) => {
     }
 };
 
-// --- FUNGSI RENDER ADMIN (KODE ASLI + PERBAIKAN) ---
-// --- FUNGSI UTAMA ADMIN (SEARCH + FILTER) ---
-// ... (kode sebelumnya) ...
-
-// --- RENDER TABEL USER (TOMBOL JELAS BERWARNA) ---
-// ... (Kode sebelumnya) ...
-
-// --- RENDER TABEL USER (DENGAN FOTO PROFIL) ---
 // --- RENDER TABEL USER (DENGAN SORTING PENDING DI ATAS) ---
 async function renderAdminUsers() {
     const tbody = document.getElementById('admin-users-list');

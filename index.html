@@ -20,53 +20,58 @@
 <body class="flex flex-col min-h-screen pb-24 bg-slate-50">
 
     <!-- HEADER / NAVBAR -->
-   <nav class="bg-white shadow-md sticky top-0 z-50 font-poppins">
+   <nav class="sticky top-0 z-50 font-poppins bg-gradient-to-r from-blue-700 to-indigo-900 border-b border-white/10 shadow-xl shadow-indigo-900/30 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 relative">
+            <!-- Tinggi Navbar h-24 (96px) -->
+            <div class="flex justify-between h-24 relative transition-all duration-300">
                 
-                <!-- 1. Logo & Toggle Kiri -->
-                <div class="flex items-center justify-between w-full md:w-auto">
-                    <div class="flex items-center cursor-pointer hover:opacity-80 transition" id="nav-logo">
-                        <i class="fa-solid fa-map-location-dot text-sky-500 text-2xl mr-2"></i>
-                        <span class="text-2xl font-bold text-slate-800 tracking-tight">ZUVO</span>
+                <!-- Logo & Toggle Kiri -->
+               <div class="flex items-center justify-between w-full md:w-auto">
+                    <div class="flex items-center flex-shrink-0 cursor-pointer hover:opacity-80 transition gap-4" id="nav-logo">
+                        <!-- Logo (Tetap Besar h-20) -->
+                        <img src="img/logo-zuvo.png" alt="Logo ZUVO" class="h-20 w-auto object-contain drop-shadow-sm">
+                        
+                        <!-- Teks ZUVO: Warna Putih agar kontras dengan background gelap -->
+                        <span class="text-4xl font-extrabold text-white tracking-tight drop-shadow-sm mt-3">ZUVO</span>
                     </div>
 
-                    <!-- HAMBURGER BUTTON (Hanya Muncul di HP) -->
+                    <!-- HAMBURGER BUTTON -->
                     <div class="flex items-center md:hidden">
-                        <button id="mobile-menu-btn" class="text-slate-500 hover:text-sky-600 focus:outline-none p-2 rounded-md border border-transparent hover:border-slate-200 transition">
-                            <!-- Icon Garis 3 -->
-                            <i class="fa-solid fa-bars text-2xl"></i>
+                        <button id="mobile-menu-btn" class="text-white hover:text-sky-300 focus:outline-none p-2 rounded-md border border-transparent hover:bg-white/10 transition">
+                            <i class="fa-solid fa-bars text-3xl"></i>
                         </button>
                     </div>
                 </div>
-                <div id="navbar-menu" class="hidden md:flex flex-col md:flex-row absolute md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent shadow-lg md:shadow-none p-4 md:p-0 space-y-4 md:space-y-0 md:space-x-1 items-center transition-all duration-300 ease-in-out border-t md:border-none border-slate-100 z-40">
+
+                <!-- Menu Navigasi -->
+                <!-- Background mobile menu disesuaikan jadi blue-900/90 agar senada dengan navbar -->
+                <div id="navbar-menu" class="hidden md:flex flex-col md:flex-row absolute md:static top-24 left-0 w-full md:w-auto bg-blue-900/90 md:bg-transparent shadow-lg md:shadow-none p-4 md:p-0 space-y-4 md:space-y-0 md:space-x-1 items-center transition-all duration-300 ease-in-out border-t md:border-none border-white/10 z-40 backdrop-blur-md md:backdrop-blur-none">
                     
-                    <button id="nav-home" class="w-full md:w-auto text-left md:text-center text-slate-600 hover:text-sky-500 px-4 py-2 font-medium rounded-lg hover:bg-slate-50 md:hover:bg-transparent transition">Beranda</button>
+                    <button id="nav-home" class="w-full md:w-auto text-left md:text-center text-white/90 hover:text-white px-4 py-2 font-bold rounded-lg hover:bg-white/10 transition">Beranda</button>
                     
                     <!-- Menu: Sudah Login -->
                     <div id="auth-menu" class="hidden w-full md:w-auto flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-2">
-                        <button id="btn-dashboard" class="w-full md:w-auto text-left md:text-center text-slate-600 hover:text-sky-500 px-4 py-2 font-medium hidden rounded-lg hover:bg-slate-50 md:hover:bg-transparent transition">Dashboard</button>
+                        <button id="btn-dashboard" class="w-full md:w-auto text-left md:text-center text-white/90 hover:text-white px-4 py-2 font-bold hidden rounded-lg hover:bg-white/10 transition">Dashboard</button>
                         
                         <!-- Profile (Clickable) -->
-                        <div class="group relative w-full md:w-auto flex items-center justify-start md:justify-center hover:bg-slate-50 md:hover:bg-transparent p-2 rounded-lg transition">
-                            <button id="btn-profile-nav" class="flex items-center text-slate-600 hover:text-sky-500 w-full md:w-auto">
-    <!-- Tambahkan ID "nav-img-container" di div bawah ini -->
-    <div id="nav-img-container" class="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 mr-2 overflow-hidden border border-slate-200">
-        <i class="fa-solid fa-user text-sm"></i>
-    </div>
-    <span id="nav-username" class="font-medium text-sm truncate max-w-[120px]">User</span>
-</button>
+                        <div class="group relative w-full md:w-auto flex items-center justify-start md:justify-center hover:bg-white/10 p-2 rounded-lg transition cursor-pointer border border-transparent hover:border-sky-300">
+                            <button id="btn-profile-nav" class="flex items-center text-white/90 hover:text-white w-full md:w-auto font-bold">
+                                <div id="nav-img-container" class="w-9 h-9 rounded-full bg-sky-600 flex items-center justify-center text-white mr-2 overflow-hidden border-2 border-white/50 shadow-sm">
+                                    <i class="fa-solid fa-user text-sm"></i>
+                                </div>
+                                <span id="nav-username" class="text-sm truncate max-w-[120px]">User</span>
+                            </button>
                         </div>
 
-                        <button id="btn-logout" class="w-full md:w-auto bg-red-50 text-red-500 md:bg-red-500 md:text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-red-100 md:hover:bg-red-600 transition text-left md:text-center flex items-center justify-between md:justify-center">
+                        <button id="btn-logout" class="w-full md:w-auto bg-red-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-lg hover:opacity-90 transition text-left md:text-center flex items-center justify-between md:justify-center shadow-red-500/50">
                             <span>Logout</span> <i class="fa-solid fa-sign-out-alt ml-2"></i>
                         </button>
                     </div>
 
                     <!-- Menu: Belum Login (Guest) -->
                     <div id="guest-menu" class="w-full md:w-auto flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-3 mt-2 md:mt-0">
-                        <button id="nav-login" class="w-full md:w-auto text-center text-slate-600 font-bold px-4 py-2 hover:text-sky-600 rounded-lg hover:bg-slate-50 md:hover:bg-transparent transition">Masuk</button>
-                        <button id="nav-register" class="w-full md:w-auto text-center bg-sky-500 text-white px-6 py-2.5 rounded-full font-bold hover:bg-sky-600 shadow-lg shadow-sky-200 transition transform hover:-translate-y-0.5">Daftar Sekarang</button>
+                        <button id="nav-login" class="w-full md:w-auto text-center text-white/90 font-bold px-5 py-2.5 hover:text-white rounded-lg hover:bg-white/10 transition">Masuk</button>
+                        <button id="nav-register" class="w-full md:w-auto text-center bg-sky-500 text-white px-7 py-2.5 rounded-full font-bold hover:bg-sky-600 hover:shadow-lg hover:scale-105 shadow-sky-500/40 transition transform duration-200">Daftar Sekarang</button>
                     </div>
                 </div>
             </div>
@@ -945,17 +950,21 @@
     </main>
 
     <!-- Footer -->
-<footer class="bg-gradient-to-r from-sky-500 to-blue-700 text-white py-4 fixed bottom-0 left-0 w-full z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-full">
-        <p class="text-xs md:text-sm font-medium opacity-90 tracking-wide">
-            © 2025 Zuvo Project.
-        </p>
-        <!-- Tombol Buka Panduan -->
-        <button onclick="window.navigate('docs')" class="text-xs md:text-sm font-bold hover:text-yellow-300 transition flex items-center gap-1">
-            <i class="fa-solid fa-circle-question"></i> Panduan Pengguna
-        </button>
-    </div>
-</footer>
+<footer class="fixed bottom-0 left-0 w-full z-50 font-poppins bg-gradient-to-r from-blue-700 to-indigo-900 border-t border-white/10 shadow-[0_-4px_20px_-4px_rgba(17,24,39,0.5)] transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-14"> <!-- Tinggi footer h-14 (56px) -->
+            
+            <!-- Copyright Teks Disesuaikan ke Putih -->
+            <p class="text-xs md:text-sm font-bold text-white/90 tracking-wide flex items-center gap-1">
+                © 2025 <span class="text-xs md:text-sm font-bold text-white/90 tracking-wide flex items-center gap-1">Zuvo.</span>
+            </p>
+
+            <!-- Tombol Panduan (Disesuaikan ke tema gelap) -->
+            <button onclick="window.navigate('docs')" class="text-xs md:text-sm font-bold text-blue-100 hover:text-white transition flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-full border border-white/20 hover:border-white/30 shadow-sm cursor-pointer group">
+                <i class="fa-solid fa-circle-question text-lg group-hover:rotate-12 transition-transform"></i> 
+                <span>Panduan Pengguna</span>
+            </button>
+        </div>
+    </footer>
 
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-xl transform translate-y-40 transition-transform duration-300 z-50 flex items-center">
