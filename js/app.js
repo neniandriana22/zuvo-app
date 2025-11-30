@@ -14,6 +14,144 @@ import {
     deleteDoc, addDoc, query, where, arrayUnion, deleteField
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
+// ... (Kode Import Firebase biarkan di atas sini) ...
+
+// ============================================================
+// --- 0. SISTEM MODAL CUSTOM (WAJIB ADA DI SINI) ---
+// ============================================================
+
+const modalEl = document.getElementById('custom-modal');
+const modalBackdrop = document.getElementById('modal-backdrop');
+const modalBox = document.getElementById('modal-box');
+const modalTitle = document.getElementById('modal-title');
+const modalMsg = document.getElementById('modal-message');
+const modalIconContainer = document.getElementById('modal-icon-container');
+const modalIcon = document.getElementById('modal-icon');
+const btnsConfirm = document.getElementById('modal-buttons-confirm');
+const btnsAlert = document.getElementById('modal-buttons-alert');
+const btnCancel = document.getElementById('btn-modal-cancel');
+const btnConfirm = document.getElementById('btn-modal-confirm');
+const btnOk = document.getElementById('btn-modal-ok');
+
+// Helper Animasi
+function openModalAnimation() {
+    if(!modalEl) {
+        console.error("Modal HTML tidak ditemukan! Pastikan kode modal ada di index.html");
+        return;
+    }
+    modalEl.classList.remove('hidden');
+    // Timeout agar transisi CSS berjalan smooth
+    setTimeout(() => {
+        modalBackdrop.classList.remove('opacity-0');
+        modalBox.classList.remove('scale-95', 'opacity-0');
+        modalBox.classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
+
+function closeModalAnimation() {
+    if(!modalEl) return;
+    modalBackdrop.classList.add('opacity-0');
+    modalBox.classList.remove('scale-100', 'opacity-100');
+    modalBox.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        modalEl.classList.add('hidden');
+    }, 300);
+}
+
+// FUNGSI 1: CUSTOM CONFIRM (Mengembalikan Promise True/False)
+window.customConfirm = (title, message, type = 'primary') => {
+    return new Promise((resolve) => {
+        // Reset Style
+        modalIconContainer.className = 'mx-auto flex items-center justify-center w-16 h-16 rounded-full mb-5 shadow-sm border-4 border-white ring-1 ring-slate-100 transform transition-all';
+        btnConfirm.className = 'py-2.5 px-4 rounded-xl font-bold text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2 text-white';
+        
+        // Atur Warna & Icon berdasarkan Tipe
+        if (type === 'danger') {
+            modalIconContainer.classList.add('bg-red-50');
+            modalIcon.className = 'fa-solid fa-trash-can text-2xl text-red-500';
+            btnConfirm.classList.add('bg-red-600', 'hover:bg-red-700', 'shadow-red-200');
+            btnConfirm.innerHTML = 'Ya, Hapus';
+        } else if (type === 'block') {
+            modalIconContainer.classList.add('bg-orange-50');
+            modalIcon.className = 'fa-solid fa-ban text-2xl text-orange-500';
+            btnConfirm.classList.add('bg-orange-600', 'hover:bg-orange-700', 'shadow-orange-200');
+            btnConfirm.innerHTML = 'Ya, Blokir';
+        } else if (type === 'logout') {
+            modalIconContainer.classList.add('bg-slate-100');
+            modalIcon.className = 'fa-solid fa-right-from-bracket text-2xl text-slate-600';
+            btnConfirm.classList.add('bg-slate-700', 'hover:bg-slate-800', 'shadow-slate-300');
+            btnConfirm.innerHTML = 'Keluar';
+        } else {
+            // Default (Info/Primary)
+            modalIconContainer.classList.add('bg-indigo-50');
+            modalIcon.className = 'fa-solid fa-circle-question text-2xl text-indigo-500';
+            btnConfirm.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'shadow-indigo-200');
+            btnConfirm.innerHTML = 'Ya, Lanjutkan';
+        }
+
+        // Isi Konten
+        modalTitle.innerText = title;
+        modalMsg.innerHTML = message; // Support HTML tag
+
+        // Tampilkan Tombol Confirm, Sembunyikan Alert
+        btnsConfirm.classList.remove('hidden');
+        btnsAlert.classList.add('hidden');
+
+        // Buka
+        openModalAnimation();
+
+        // Handle Klik (One-time event)
+        const handleConfirm = () => { cleanup(); closeModalAnimation(); resolve(true); };
+        const handleCancel = () => { cleanup(); closeModalAnimation(); resolve(false); };
+
+        function cleanup() {
+            btnConfirm.removeEventListener('click', handleConfirm);
+            btnCancel.removeEventListener('click', handleCancel);
+        }
+
+        btnConfirm.addEventListener('click', handleConfirm);
+        btnCancel.addEventListener('click', handleCancel);
+    });
+};
+
+// FUNGSI 2: CUSTOM ALERT (Hanya Tombol OK)
+window.customAlert = (title, message, type = 'success') => {
+    return new Promise((resolve) => {
+        if(!modalEl) { alert(message); resolve(true); return; } // Fallback jika HTML modal hilang
+
+        modalIconContainer.className = 'mx-auto flex items-center justify-center w-16 h-16 rounded-full mb-5 shadow-sm border-4 border-white ring-1 ring-slate-100';
+        
+        if (type === 'success') {
+            modalIconContainer.classList.add('bg-emerald-50');
+            modalIcon.className = 'fa-solid fa-circle-check text-3xl text-emerald-500';
+        } else if (type === 'error') {
+            modalIconContainer.classList.add('bg-red-50');
+            modalIcon.className = 'fa-solid fa-circle-xmark text-3xl text-red-500';
+        } else if (type === 'warning') {
+            modalIconContainer.classList.add('bg-amber-50');
+            modalIcon.className = 'fa-solid fa-triangle-exclamation text-3xl text-amber-500';
+        } else {
+            modalIconContainer.classList.add('bg-blue-50');
+            modalIcon.className = 'fa-solid fa-circle-info text-3xl text-blue-500';
+        }
+
+        modalTitle.innerText = title;
+        modalMsg.innerHTML = message;
+
+        btnsConfirm.classList.add('hidden');
+        btnsAlert.classList.remove('hidden');
+
+        openModalAnimation();
+
+        btnOk.onclick = () => {
+            closeModalAnimation();
+            resolve(true);
+        };
+    });
+};
+
+// ... (Lanjutkan dengan kode Auth Listener, Navigation, dll di bawahnya) ...
+
 // ============================================================
 // --- NAVBAR RESPONSIVE LOGIC (FIXED) ---
 // ============================================================
@@ -414,13 +552,60 @@ if(passInput) {
 // ---------------------------------------------------------------
 
 
+// --- LOGOUT LOGIC (DENGAN CUSTOM MODAL) ---
+// ============================================================
 document.getElementById('btn-logout').addEventListener('click', async () => {
-    if(confirm("Yakin ingin keluar?")) {
+    // Menggunakan customConfirm bukan confirm() biasa
+    // Tipe 'logout' akan memberikan ikon pintu keluar berwarna abu-abu
+    const isConfirmed = await window.customConfirm(
+        "Konfirmasi Logout", 
+        "Apakah Anda yakin ingin keluar dari sesi ini?", 
+        "logout"
+    );
+
+    // Jika user klik "Keluar" (True)
+    if (isConfirmed) {
         await signOut(auth);
         window.navigate('home');
         showToast("Berhasil Logout");
     }
 });
+
+// FUNGSI 2: CUSTOM ALERT (Hanya Tombol OK)
+window.customAlert = (title, message, type = 'success') => {
+    return new Promise((resolve) => {
+        if(!modalEl) { alert(message); resolve(true); return; } // Fallback jika HTML modal hilang
+
+        modalIconContainer.className = 'mx-auto flex items-center justify-center w-16 h-16 rounded-full mb-5 shadow-sm border-4 border-white ring-1 ring-slate-100';
+        
+        if (type === 'success') {
+            modalIconContainer.classList.add('bg-emerald-50');
+            modalIcon.className = 'fa-solid fa-circle-check text-3xl text-emerald-500';
+        } else if (type === 'error') {
+            modalIconContainer.classList.add('bg-red-50');
+            modalIcon.className = 'fa-solid fa-circle-xmark text-3xl text-red-500';
+        } else if (type === 'warning') {
+            modalIconContainer.classList.add('bg-amber-50');
+            modalIcon.className = 'fa-solid fa-triangle-exclamation text-3xl text-amber-500';
+        } else {
+            modalIconContainer.classList.add('bg-blue-50');
+            modalIcon.className = 'fa-solid fa-circle-info text-3xl text-blue-500';
+        }
+
+        modalTitle.innerText = title;
+        modalMsg.innerHTML = message;
+
+        btnsConfirm.classList.add('hidden');
+        btnsAlert.classList.remove('hidden');
+
+        openModalAnimation();
+
+        btnOk.onclick = () => {
+            closeModalAnimation();
+            resolve(true);
+        };
+    });
+};
 
 // ... (Kode sebelumnya)
 
@@ -682,16 +867,23 @@ document.getElementById('form-register').addEventListener('submit', async (e) =>
 });
 
 // --- HOME LOGIC ---
-// --- HOME LOGIC (FIX: FOTO UTUH DENGAN BACKGROUND BLUR) ---
+// --- HOME LOGIC (FIXED: LOGIKA FILTER & SORTING LEBIH AKURAT) ---
 async function renderDestinations() {
     const list = document.getElementById('destination-list');
     
-    // Ambil nilai inputan
-    const search = document.getElementById('search-input').value.toLowerCase();
-    const filter = document.getElementById('filter-category').value;
-    const sortBy = document.getElementById('sort-options').value;
+    // Ambil elemen input (Pastikan ID di HTML sudah sesuai dengan perbaikan di atas)
+    const searchInput = document.getElementById('search-input');
+    const filterSelect = document.getElementById('filter-category');
+    const sortSelect = document.getElementById('sort-options');
 
-    list.innerHTML = '<div class="col-span-full text-center py-10"><i class="fa-solid fa-spinner fa-spin text-2xl text-slate-400"></i></div>';
+    // Guard Clause: Jika elemen tidak ada (misal di halaman lain), berhenti.
+    if (!list || !searchInput || !filterSelect || !sortSelect) return;
+
+    const searchValue = searchInput.value.toLowerCase();
+    const filterValue = filterSelect.value;
+    const sortValue = sortSelect.value;
+
+    list.innerHTML = '<div class="col-span-full text-center py-10"><i class="fa-solid fa-spinner fa-spin text-3xl text-sky-500"></i><p class="mt-2 text-slate-400">Sedang mencari destinasi terbaik...</p></div>';
 
     try {
         const snap = await getDocs(collection(db, COLL_DESTINATIONS));
@@ -700,85 +892,107 @@ async function renderDestinations() {
         snap.forEach(doc => {
             const d = doc.data();
             
-            // --- LOGIKA PENYARINGAN UTAMA ---
-            // 1. Cek Status Akun: Harus 'active' (sudah di-acc Admin)
-            // 2. Cek Kesiapan Data: Harus 'isSetup === true' (sudah diedit Pengelola)
-            const isActive = d.status === 'active';
-            const isReady = d.isSetup === true;
+            // --- SINKRONISASI 1: KEAMANAN STATUS ---
+            // Hanya tampilkan jika status 'active'.
+            // Jangan tampilkan jika 'blocked', 'pending', atau 'deleted'.
+            if (d.status !== 'active') return;
 
-            // Jika belum aktif atau belum diedit, JANGAN TAMPILKAN (skip)
-            if (!isActive || !isReady) return; 
+            // --- SINKRONISASI 2: DATA SETUP ---
+            // Hanya tampilkan jika Manager sudah mengisi data (isSetup == true)
+            // Ini mencegah card kosong tampil di beranda
+            if (d.isSetup !== true) return;
 
-            // --- Logika Pencarian & Filter Kategori ---
-            const matchesSearch = d.name?.toLowerCase().includes(search) || false;
-            const matchesFilter = filter === 'all' || d.category === filter;
+            // --- FILTERING (CASE INSENSITIVE) ---
+            const nameMatch = d.name.toLowerCase().includes(searchValue);
+            // Cek juga deskripsi atau alamat agar pencarian lebih pintar
+            const locMatch = d.address ? d.address.toLowerCase().includes(searchValue) : false;
+            
+            const categoryMatch = filterValue === 'all' || d.category === filterValue;
 
-            if(matchesSearch && matchesFilter) {
+            if ((nameMatch || locMatch) && categoryMatch) {
                 destinations.push({ id: doc.id, ...d });
             }
         });
 
-        // --- Logika Sorting ---
-        if (sortBy === 'highest_rating') {
+        // --- SORTING LOGIC ---
+        if (sortValue === 'highest_rating') {
+            // Urutkan berdasarkan rating (descending)
             destinations.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         } else {
-            // Default: Terbaru
+            // Urutkan berdasarkan waktu (Asumsi field createdAt ada, jika tidak pakai urutan array default/reverse)
+            // Karena Firestore ID acak, reverse() mensimulasikan "Terbaru ditambahkan" jika insert berurutan
             destinations.reverse(); 
         }
 
-        // Render HTML
-        let html = '';
-        destinations.forEach(d => {
-            const imgSrc = (d.image && d.image.length > 20) ? d.image : 'https://via.placeholder.com/400?text=No+Image';
-
-            html += `
-            <div class="bg-white rounded-xl shadow-sm hover:shadow-xl transition overflow-hidden cursor-pointer group flex flex-col h-full border border-slate-100" onclick="window.viewDetail('${d.id}')">
-                <div class="h-64 relative overflow-hidden bg-slate-200">
-                    <img src="${imgSrc}" class="absolute inset-0 w-full h-full object-cover blur-xl scale-110 opacity-60">
-                    <img src="${imgSrc}" class="relative w-full h-full object-contain z-10 transition duration-500 group-hover:scale-105" onerror="this.src='https://via.placeholder.com/400?text=Image+Error'">
-                    <span class="absolute top-3 left-3 z-20 bg-white/90 px-3 py-1 rounded-full text-xs font-bold text-slate-700 shadow-sm">
-                        ${d.category || 'Umum'}
-                    </span>
-                </div>
-                <div class="p-5 flex flex-col flex-grow relative bg-white">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-lg font-bold text-slate-800 line-clamp-1 group-hover:text-sky-600 transition">${d.name}</h3>
-                        <div class="flex items-center text-xs font-bold text-yellow-500 bg-yellow-50 px-2 py-1 rounded border border-yellow-100">
-                            <i class="fa-solid fa-star mr-1"></i> ${d.rating?.toFixed(1) || 0}
-                        </div>
-                    </div>
-                    <p class="text-slate-500 text-sm line-clamp-2 mb-4 flex-grow">${d.description || '...'}</p>
-                    <div class="text-xs text-slate-400 flex items-center pt-4 border-t border-slate-50">
-                        <i class="fa-solid fa-map-marker-alt mr-1 text-red-400"></i> 
-                        <span class="truncate">${d.address?.substring(0,30) || 'Lokasi'}...</span>
-                    </div>
-                </div>
-            </div>`;
-        });
-        
-         if (destinations.length === 0) {
+        // --- RENDER HTML ---
+        if (destinations.length === 0) {
             list.innerHTML = `
-            <div class="col-span-full flex flex-col items-center justify-center py-20 text-center">
-                <div class="bg-sky-50 p-8 rounded-full mb-6 animate-bounce shadow-sm border border-sky-100">
-                    <i class="fa-solid fa-plane-slash text-6xl text-sky-400"></i>
+            <div class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+                <div class="bg-slate-100 p-6 rounded-full mb-4">
+                    <i class="fa-solid fa-map-location-dot text-4xl text-slate-300"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-slate-800 mb-3">Yah, Destinasi Tidak Ditemukan</h3>
-                <p class="text-slate-500 max-w-md mx-auto mb-8 leading-relaxed">
-                    Kami tidak menemukan wisata dengan kata kunci atau kategori tersebut. Coba cari kata lain atau jelajahi semua kategori.
+                <h3 class="text-xl font-bold text-slate-700">Tidak ditemukan</h3>
+                <p class="text-slate-500 text-sm mt-1 max-w-md">
+                    Coba ubah kata kunci pencarian atau ganti filter kategori.
                 </p>
                 <button onclick="document.getElementById('search-input').value=''; document.getElementById('filter-category').value='all'; renderDestinations();" 
-                        class="px-8 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-full font-bold hover:bg-sky-50 hover:text-sky-600 hover:border-sky-200 transition shadow-sm transform hover:-translate-y-1">
-                    <i class="fa-solid fa-rotate-right mr-2"></i> Reset Pencarian
+                        class="mt-6 text-sky-600 font-bold hover:underline text-sm">
+                    Reset Pencarian
                 </button>
-            </div>
-            `;
+            </div>`;
         } else {
+            let html = '';
+            destinations.forEach(d => {
+                const imgSrc = (d.image && d.image.length > 20) ? d.image : 'https://via.placeholder.com/400x300?text=Foto+Tidak+Tersedia';
+                
+                // Format Rating agar selalu ada 1 desimal (contoh: 4.0, 4.5)
+                const ratingDisplay = d.rating ? parseFloat(d.rating).toFixed(1) : '0.0';
+
+                html += `
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group border border-slate-100 flex flex-col h-full transform hover:-translate-y-1" onclick="window.viewDetail('${d.id}')">
+                    <!-- Image Wrapper -->
+                    <div class="h-56 relative overflow-hidden bg-slate-100">
+                        <img src="${imgSrc}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Error'">
+                        
+                        <!-- Badge Kategori -->
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-slate-700 shadow-sm border border-slate-100 flex items-center gap-1">
+                                <i class="fa-solid fa-tag text-sky-500 text-[10px]"></i> ${d.category}
+                            </span>
+                        </div>
+
+                        <!-- Badge Rating (Overlay) -->
+                         <div class="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-lg text-white text-xs font-bold flex items-center gap-1 shadow-lg border border-white/10">
+                            <i class="fa-solid fa-star text-yellow-400"></i> ${ratingDisplay}
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2 line-clamp-1 group-hover:text-sky-600 transition-colors">${d.name}</h3>
+                        
+                        <div class="flex items-start gap-2 text-xs text-slate-500 mb-4 h-9 overflow-hidden">
+                            <i class="fa-solid fa-location-dot text-red-400 mt-0.5 shrink-0"></i>
+                            <p class="line-clamp-2 leading-relaxed">${d.address || 'Lokasi belum diatur'}</p>
+                        </div>
+
+                        <div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between text-xs">
+                            <span class="text-slate-400 font-medium">
+                                <i class="fa-solid fa-comments mr-1"></i> ${d.reviewCount || 0} Ulasan
+                            </span>
+                            <span class="text-sky-600 font-bold group-hover:translate-x-1 transition-transform flex items-center">
+                                Lihat Detail <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>`;
+            });
             list.innerHTML = html;
         }
 
     } catch (err) {
-        console.error("Error loading home:", err);
-        list.innerHTML = '<p class="text-center text-red-500">Gagal memuat data.</p>';
+        console.error("Error render destinations:", err);
+        list.innerHTML = '<div class="col-span-full text-center text-red-500 py-10 bg-red-50 rounded-xl">Gagal memuat data. Periksa koneksi internet Anda.</div>';
     }
 }
 
@@ -787,6 +1001,10 @@ document.getElementById('btn-search').addEventListener('click', renderDestinatio
 // TAMBAHAN BARU: Panggil renderDestinations saat opsi sorting diubah
 const sortOptionsEl = document.getElementById('sort-options');
 if(sortOptionsEl) sortOptionsEl.addEventListener('change', renderDestinations);
+
+// TAMBAHAN: Panggil renderDestinations saat Kategori diubah (Agar otomatis)
+const filterCategoryEl = document.getElementById('filter-category');
+if(filterCategoryEl) filterCategoryEl.addEventListener('change', renderDestinations);
 
 // ... (sisanya tetap sama)
 
@@ -1050,139 +1268,219 @@ document.getElementById('form-review').addEventListener('submit', async (e) => {
 
 // --- ADMIN LOGIC ---
 // --- FUNGSI MODAL ADMIN (WAJIB ADA AGAR TOMBOL MATA BERFUNGSI) ---
+// --- MODAL ADMIN LOGIC YANG SUDAH DIPERBAIKI (TARUH DI JS/APP.JS) ---
+
 window.closeAdminModal = () => {
-    document.getElementById('modal-admin-detail').classList.add('hidden');
+    const modal = document.getElementById('modal-admin-detail');
+    if (!modal) return;
+    
+    // Animasi tutup (Fade out)
+    modal.classList.remove('opacity-100', 'visible');
+    modal.classList.add('opacity-0', 'invisible');
+    
+    const modalContent = modal.querySelector('div');
+    if (modalContent) {
+        modalContent.classList.remove('scale-100');
+        modalContent.classList.add('scale-95');
+    }
+    
+    // Hide total setelah animasi selesai (300ms)
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300);
 };
 
-// --- UPDATE NOMOR 4: DETAIL GENERIC (USER & MANAGER) ---
-// --- ADMIN: DETAIL POPUP (DINAMIS: BEDA TAMPILAN USER VS MANAGER) ---
-// --- ADMIN: DETAIL POPUP (DENGAN FOTO UTUH & BACKGROUND BLUR) ---
-// --- ADMIN: DETAIL POPUP (REVISI: HANDLE AKUN TERHAPUS) ---
-// --- ADMIN: DETAIL POPUP (YANG DIPERCANTIK) ---
+// --- ADMIN: DETAIL POPUP (MODULAR & RAPIH) ---
 window.viewAdminDetailUser = async (uid, role) => {
     const modal = document.getElementById('modal-admin-detail');
     const modalBody = modal.querySelector('.p-6');
-    
+    const modalContainer = modal.querySelector('.bg-white'); 
+
+    // 1. Reset Tampilan Modal (Agar animasi jalan & tidak transparan)
     modal.classList.remove('hidden');
-    modalBody.innerHTML = '<div class="flex justify-center py-10"><i class="fa-solid fa-spinner fa-spin text-3xl text-slate-400"></i></div>';
+    void modal.offsetWidth; // Force reflow (Penting untuk animasi)
+    modal.classList.remove('opacity-0', 'invisible');
+    modal.classList.add('opacity-100', 'visible');
+
+    // Reset Zoom Effect
+    if (modalContainer) {
+        modalContainer.classList.remove('scale-95');
+        modalContainer.classList.add('scale-100');
+    }
+
+    // 2. Tampilkan Loading State
+    modalBody.innerHTML = '<div class="flex justify-center py-12"><i class="fa-solid fa-spinner fa-spin text-3xl text-indigo-500"></i></div>';
 
     try {
-        // 1. Ambil Data User (Cek Status)
+        // --- AMBIL DATA USER ---
         const userSnap = await getDoc(doc(db, COLL_USERS, uid));
         let u = null;
         let isDeleted = false;
 
+        // Cek apakah user ada atau sudah dihapus
         if (userSnap.exists()) {
             u = userSnap.data();
         } else {
             isDeleted = true;
-            u = {
-                name: "Pengelola Dihapus",
-                email: "-",
-                photoURL: null,
-                role: role || 'manager',
-                status: 'deleted',
-                createdAt: null
-            };
+            u = { name: "Pengguna Terhapus", email: "-", photoURL: null, role: role || 'user', status: 'deleted', createdAt: null };
         }
 
-        // Siapkan variabel tampilan user
-        const userAvatar = u.photoURL || `https://ui-avatars.com/api/?name=X&background=fee2e2&color=ef4444`;
+        // --- FORMAT DATA USER (Badge & Tanggal) ---
+        const userAvatar = u.photoURL || `https://ui-avatars.com/api/?name=${u.name}&background=random`;
+        const joinDate = u.createdAt ? new Date(u.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
         
+        // Warna Badge Status
         let statusBadge = '';
-        if (isDeleted) {
-            statusBadge = '<span class="px-3 py-1 rounded-full text-xs font-bold bg-red-600 text-white uppercase shadow-sm"><i class="fa-solid fa-user-slash mr-1"></i> AKUN DIHAPUS</span>';
-        } else {
-            const statusColor = u.status === 'active' ? 'bg-green-100 text-green-700' : (u.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700');
-            statusBadge = `<span class="px-3 py-1 rounded-full text-xs font-bold uppercase ${statusColor}">${u.status}</span>`;
-        }
+        if (isDeleted) statusBadge = '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold uppercase border border-red-200">Terhapus</span>';
+        else if (u.status === 'active') statusBadge = '<span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold uppercase border border-green-200">Aktif</span>';
+        else if (u.status === 'blocked') statusBadge = '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold uppercase border border-red-200">Diblokir</span>';
+        else statusBadge = '<span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-bold uppercase border border-yellow-200">Pending</span>';
 
-        // 2. Ambil Data Destinasi (Fokus Utama)
-        let destHtml = '';
-        if (role === 'manager' || isDeleted) { 
+        // Label Role
+        let roleBadge = '';
+        if (u.role === 'manager') roleBadge = '<span class="text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100 text-[10px] font-bold uppercase tracking-wider"><i class="fa-solid fa-briefcase mr-1"></i> Pengelola</span>';
+        else roleBadge = '<span class="text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-[10px] font-bold uppercase tracking-wider"><i class="fa-solid fa-user mr-1"></i> User Umum</span>';
+
+
+        // --- BAGIAN 1: KARTU PROFIL (Tampil untuk SEMUA) ---
+        const userSectionHtml = `
+            <div class="mb-6">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span class="w-8 h-[1px] bg-slate-300"></span> Informasi Akun
+                </h4>
+                <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col sm:flex-row items-center sm:items-start gap-5">
+                    <!-- Foto Profil -->
+                    <div class="relative shrink-0">
+                        <img src="${userAvatar}" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm">
+                        <div class="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
+                            ${u.status === 'active' ? '<i class="fa-solid fa-circle-check text-green-500 text-lg"></i>' : '<i class="fa-solid fa-circle-xmark text-red-500 text-lg"></i>'}
+                        </div>
+                    </div>
+
+                    <!-- Detail Teks -->
+                    <div class="flex-grow text-center sm:text-left space-y-2 w-full">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 leading-tight">${u.name}</h3>
+                            <div class="flex items-center justify-center sm:justify-start gap-2 mt-1">
+                                ${roleBadge}
+                                <span class="text-[10px] text-slate-400 font-mono bg-white px-1.5 rounded border border-slate-100">ID: ${uid.substring(0,6)}...</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm mt-3 pt-3 border-t border-slate-200/60 w-full">
+                            <div class="flex items-center justify-center sm:justify-start gap-2 text-slate-600">
+                                <i class="fa-regular fa-envelope text-slate-400 w-4"></i> ${u.email}
+                            </div>
+                            <div class="flex items-center justify-center sm:justify-start gap-2 text-slate-600">
+                                <i class="fa-regular fa-calendar text-slate-400 w-4"></i> Gabung: ${joinDate}
+                            </div>
+                            <div class="flex items-center justify-center sm:justify-start gap-2 text-slate-600 sm:col-span-2">
+                                <i class="fa-solid fa-shield-halved text-slate-400 w-4"></i> Status: ${statusBadge}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // --- BAGIAN 2: DATA WISATA (Hanya jika Role = Manager) ---
+        let destSectionHtml = '';
+        
+        // Tampilkan jika role manager ATAU jika user terhapus tapi dulunya manager
+        if (u.role === 'manager' || (isDeleted && role === 'manager')) {
             const destSnap = await getDoc(doc(db, COLL_DESTINATIONS, uid));
             
             if (destSnap.exists()) {
                 const d = destSnap.data();
-                const destImg = (d.image && d.image.length > 20) ? d.image : 'https://via.placeholder.com/400x200?text=No+Image';
+                // Gunakan gambar placeholder jika kosong
+                const destImg = (d.image && d.image.length > 20) ? d.image : 'https://via.placeholder.com/600x300?text=Belum+Ada+Foto';
+                // URL Peta
                 const mapUrl = (d.lat && d.lng) ? `https://maps.google.com/maps?q=${d.lat},${d.lng}&z=15&output=embed` : '';
 
                 // Badge Status Wisata
-                let destStatusBadge = '';
-                if(d.status === 'active') destStatusBadge = '<span class="bg-green-500 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Tayang</span>';
-                else if(d.status === 'pending') destStatusBadge = '<span class="bg-yellow-500 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Pending</span>';
-                else destStatusBadge = '<span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase shadow-sm">Blocked</span>';
+                let dsBadge = '';
+                if(d.status === 'active') dsBadge = '<span class="bg-green-500 text-white text-[10px] px-2 py-1 rounded shadow-sm font-bold uppercase tracking-wide">Tayang</span>';
+                else if(d.status === 'pending') dsBadge = '<span class="bg-yellow-500 text-white text-[10px] px-2 py-1 rounded shadow-sm font-bold uppercase tracking-wide">Pending Review</span>';
+                else dsBadge = '<span class="bg-red-500 text-white text-[10px] px-2 py-1 rounded shadow-sm font-bold uppercase tracking-wide">Non-Aktif</span>';
 
-                destHtml = `
-                <div class="mt-6 border-t border-slate-200 pt-6">
-                    <h4 class="text-sm font-bold text-slate-700 uppercase mb-4 flex items-center">
-                        <i class="fa-solid fa-map-location-dot mr-2 text-indigo-500"></i> Detail Wisata yang Dikelola
+                // HTML Card Wisata (Mirip Dashboard tapi tanpa ulasan)
+                destSectionHtml = `
+                <div class="animate-fade-in-up">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <span class="w-8 h-[1px] bg-slate-300"></span> Data Destinasi Wisata
                     </h4>
-
-                    <div class="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-                        <!-- Hero Image Wisata -->
-                        <div class="relative h-48 bg-slate-800 group overflow-hidden">
-                            <img src="${destImg}" class="absolute inset-0 w-full h-full object-cover opacity-60 blur-sm scale-110">
-                            <img src="${destImg}" class="relative w-full h-full object-contain p-2 z-10 transition-transform duration-500 group-hover:scale-105">
-                            <div class="absolute top-3 right-3 z-20">
-                                ${destStatusBadge}
+                    
+                    <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <!-- Hero Image & Badges -->
+                        <div class="relative h-48 group bg-slate-900">
+                            <img src="${destImg}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-90">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+                            
+                            <!-- Badges Pojok Kanan Atas -->
+                            <div class="absolute top-3 right-3 flex gap-2">
+                                ${dsBadge}
                             </div>
-                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4 z-20">
-                                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded uppercase font-bold mb-1 inline-block shadow-sm border border-white/20">${d.category || 'Umum'}</span>
-                                <h3 class="text-xl font-bold text-white leading-tight drop-shadow-md">${d.name || 'Nama Belum Diatur'}</h3>
+
+                            <!-- Judul di Bawah -->
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <span class="bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] px-2 py-0.5 rounded mb-2 inline-block font-bold uppercase tracking-wider">
+                                    ${d.category || 'Kategori Umum'}
+                                </span>
+                                <h3 class="text-xl font-bold text-white leading-tight drop-shadow-md">${d.name || 'Nama Belum Diisi'}</h3>
                             </div>
                         </div>
 
-                        <!-- Info Wisata -->
-                        <div class="p-5 space-y-4">
-                            <!-- Stats -->
-                            <div class="flex items-center gap-4 text-sm border-b border-slate-100 pb-4">
-                                <div class="flex items-center text-yellow-600 font-bold bg-yellow-50 px-2 py-1 rounded border border-yellow-100">
-                                    <i class="fa-solid fa-star mr-1"></i> ${d.rating?.toFixed(1) || 0}
-                                </div>
-                                <div class="text-slate-500 text-xs font-medium">
-                                    <i class="fa-solid fa-comment mr-1"></i> ${d.reviewCount || 0} Ulasan
-                                </div>
-                                <div class="text-slate-500 ml-auto text-xs">
-                                    Status Data: ${d.isSetup ? '<span class="text-green-600 font-bold"><i class="fa-solid fa-check-circle mr-1"></i>Lengkap</span>' : '<span class="text-red-500 font-bold"><i class="fa-solid fa-circle-xmark mr-1"></i>Belum Setup</span>'}
-                                </div>
+                        <!-- Stats Bar (Rating & Jumlah Ulasan) -->
+                        <div class="flex items-center justify-between px-5 py-3 border-b border-slate-100 bg-slate-50/50">
+                            <div class="flex items-center gap-1 text-yellow-500 font-bold text-lg">
+                                <i class="fa-solid fa-star"></i> ${d.rating?.toFixed(1) || '0.0'}
                             </div>
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wide">
+                                ${d.reviewCount || 0} Ulasan Total
+                            </div>
+                        </div>
 
+                        <div class="p-5 space-y-5">
                             <!-- Deskripsi -->
                             <div>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-wider">Deskripsi</p>
-                                <div class="text-sm text-slate-600 italic bg-slate-50 p-3 rounded-lg border border-slate-100 relative">
-                                    <i class="fa-solid fa-quote-left absolute top-2 left-2 text-slate-200 text-xl"></i>
-                                    <p class="relative z-10 pl-4 line-clamp-3 leading-relaxed">"${d.description || 'Tidak ada deskripsi.'}"</p>
+                                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Deskripsi</p>
+                                <div class="text-sm text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100 italic leading-relaxed">
+                                    "${d.description || 'Deskripsi belum ditambahkan oleh pengelola.'}"
                                 </div>
                             </div>
 
-                            <!-- Lokasi & Kontak -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Grid Info (Lokasi & Kontak) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Peta -->
                                 <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-wider">Lokasi</p>
-                                    <p class="text-sm text-slate-700 flex items-start gap-2 mb-2">
-                                        <i class="fa-solid fa-location-dot mt-1 text-red-400"></i>
-                                        <span class="line-clamp-2">${d.address || '-'}</span>
-                                    </p>
-                                    ${mapUrl ? `<div class="h-24 rounded-lg overflow-hidden border border-slate-200 shadow-sm"><iframe src="${mapUrl}" width="100%" height="100%" style="border:0;" loading="lazy"></iframe></div>` : '<div class="h-24 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400 border border-dashed border-slate-300">Peta tidak tersedia</div>'}
-                                </div>
-                                <div>
-                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-wider">Kontak Pengelola</p>
-                                    <div class="text-sm text-slate-700 bg-indigo-50/50 p-3 rounded-lg border border-indigo-100">
-                                        <p class="mb-2 flex items-center gap-2">
-                                            <span class="w-6 h-6 rounded-full bg-white flex items-center justify-center text-indigo-500 shadow-sm"><i class="fa-solid fa-phone text-xs"></i></span> 
-                                            ${d.contact ? `<span class="font-medium">${d.contact}</span>` : '<span class="text-red-500 italic font-bold text-xs bg-white px-2 py-0.5 rounded border border-red-100">Tidak ada (User Dihapus)</span>'}
-                                        </p>
-                                        <p class="flex items-center gap-2">
-                                            <span class="w-6 h-6 rounded-full bg-white flex items-center justify-center text-indigo-500 shadow-sm"><i class="fa-solid fa-user text-xs"></i></span> 
-                                            <span class="truncate">${u.name}</span>
-                                        </p>
+                                    <p class="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-1"><i class="fa-solid fa-map-location-dot"></i> Lokasi</p>
+                                    <div class="text-sm text-slate-700 mb-2 line-clamp-2 min-h-[2.5rem]">
+                                        ${d.address || 'Alamat belum diatur'}
                                     </div>
-                                    ${isDeleted ? `<div class="mt-2 text-[10px] text-red-600 bg-red-50 p-2 rounded border border-red-100 flex items-start gap-2">
-                                        <i class="fa-solid fa-triangle-exclamation mt-0.5"></i> 
-                                        <span><b>Perhatian:</b> Akun pengelola asli sudah dihapus. Wisata ini berjalan tanpa pemilik akun (Yatim Piatu).</span>
-                                    </div>` : ''}
+                                    <div class="h-28 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 relative shadow-inner">
+                                        ${mapUrl 
+                                            ? `<iframe src="${mapUrl}" class="w-full h-full border-0" loading="lazy"></iframe>` 
+                                            : '<div class="flex items-center justify-center h-full text-slate-400 text-xs">Peta Tidak Tersedia</div>'}
+                                    </div>
+                                </div>
+
+                                <!-- Kontak -->
+                                <div>
+                                    <p class="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-1"><i class="fa-solid fa-address-book"></i> Kontak</p>
+                                    <div class="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100 h-[calc(100%-2rem)] flex flex-col justify-center">
+                                        <div class="mb-3">
+                                            <span class="text-[10px] text-indigo-400 font-bold uppercase block mb-1">No. Telepon / WA</span>
+                                            <span class="text-indigo-700 font-mono font-bold text-sm bg-white px-2 py-1 rounded border border-indigo-100 inline-block">
+                                                ${d.contact || '-'}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span class="text-[10px] text-indigo-400 font-bold uppercase block mb-1">Status Data</span>
+                                            <span class="text-xs font-bold ${d.isSetup ? 'text-green-600' : 'text-red-500'}">
+                                                ${d.isSetup ? '<i class="fa-solid fa-circle-check"></i> Data Lengkap' : '<i class="fa-solid fa-circle-xmark"></i> Belum Setup'}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1190,42 +1488,29 @@ window.viewAdminDetailUser = async (uid, role) => {
                 </div>
                 `;
             } else {
-                 destHtml = `<div class="mt-6 p-6 bg-slate-50 rounded-xl text-center text-slate-400 italic text-sm border border-dashed border-slate-200">
-                    <i class="fa-solid fa-folder-open text-2xl mb-2 opacity-50"></i><br>
-                    Belum ada data wisata yang dibuat.
-                 </div>`;
+                // Jika Manager belum setup data sama sekali
+                destSectionHtml = `
+                <div class="mt-6 p-8 bg-slate-50 rounded-2xl text-center border-2 border-dashed border-slate-200">
+                    <div class="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400">
+                        <i class="fa-solid fa-folder-open text-xl"></i>
+                    </div>
+                    <h4 class="text-slate-600 font-bold text-sm">Data Wisata Kosong</h4>
+                    <p class="text-slate-400 text-xs mt-1">Pengelola ini belum mengatur informasi wisatanya.</p>
+                </div>`;
             }
         }
 
-        // --- RENDER MODAL UTAMA ---
+        // --- GABUNGKAN SEMUA KE DALAM MODAL ---
         modalBody.innerHTML = `
-            <div>
-                <!-- Header Profil -->
-                <div class="flex items-center gap-5 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <div class="relative shrink-0">
-                        <img src="${userAvatar}" class="w-16 h-16 rounded-full object-cover border-4 ${isDeleted ? 'border-red-100 grayscale' : 'border-white shadow-md'}">
-                        ${isDeleted ? '<div class="absolute -bottom-1 -right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs border-2 border-white shadow-sm"><i class="fa-solid fa-xmark"></i></div>' : ''}
-                    </div>
-                    <div class="flex-grow">
-                        <h3 class="text-xl font-bold ${isDeleted ? 'text-slate-400 line-through decoration-2 decoration-red-300' : 'text-slate-800'}">${u.name}</h3>
-                        <p class="text-sm text-slate-500 font-mono flex items-center gap-2">
-                            <i class="fa-solid fa-envelope opacity-50"></i> ${u.email}
-                        </p>
-                        <div class="mt-2 flex flex-wrap gap-2 items-center">
-                            ${statusBadge}
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-white text-slate-500 border border-slate-200 uppercase font-mono tracking-tight shadow-sm">ID: ${uid.substring(0,8)}...</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Konten Wisata -->
-                ${destHtml}
+            <div class="space-y-6">
+                ${userSectionHtml}
+                ${destSectionHtml}
             </div>
         `;
 
     } catch (err) {
         console.error(err);
-        modalBody.innerHTML = `<p class="text-red-500 text-center bg-red-50 p-4 rounded-lg border border-red-100">Gagal memuat detail: ${err.message}</p>`;
+        modalBody.innerHTML = `<div class="bg-red-50 text-red-600 p-4 rounded-lg text-center text-sm border border-red-100">Gagal memuat detail: ${err.message}</div>`;
     }
 };
 
@@ -1407,33 +1692,42 @@ async function renderAdminDestinations() {
 }
 
 // --- FUNGSI ADMIN: HAPUS DESTINASI (RESET DATA WISATA) ---
+// ============================================================
 window.adminDeleteDestination = async (destId) => {
-    if (!confirm("PERINGATAN: Apakah Anda yakin ingin menghapus data wisata ini?\n\n- Akun Pengelola TIDAK akan terhapus.\n- Semua Ulasan pengunjung akan terhapus.\n- Data akan hilang permanen.")) return;
+    // Menggunakan customConfirm dengan tipe 'danger' (Warna Merah)
+    const confirmed = await window.customConfirm(
+        "Reset Data Wisata?",
+        "Tindakan ini akan menghapus foto, deskripsi, dan semua ulasan.<br>Akun pengelola <b>TIDAK</b> terhapus.<br><br><b>Data akan hilang permanen.</b>",
+        "danger"
+    );
 
-    document.body.style.cursor = 'wait';
+    // Jika user klik Batal, berhenti di sini
+    if (!confirmed) return;
+
+    document.body.style.cursor = 'wait'; // Ubah kursor jadi loading
 
     try {
         // 1. Hapus Dokumen Destinasi
         await deleteDoc(doc(db, COLL_DESTINATIONS, destId));
 
-        // 2. Hapus Semua Ulasan Terkait
+        // 2. Hapus Semua Ulasan Terkait wisata ini
         const qReviews = query(collection(db, COLL_REVIEWS), where("destId", "==", destId));
         const snapReviews = await getDocs(qReviews);
         const deletePromises = snapReviews.docs.map(d => deleteDoc(doc(db, COLL_REVIEWS, d.id)));
         await Promise.all(deletePromises);
 
-        showToast("Data Wisata berhasil dihapus (Reset).");
+        showToast("Data Wisata berhasil direset.");
         
-        // Refresh Tabel Destinasi & Update Stats
+        // Refresh Tampilan Tabel Admin
         renderAdminDestinations();
-        // Update juga stats count di atas (karena jumlah wisata berkurang)
-        renderAdminUsers(); 
+        renderAdminUsers(); // Update statistik jumlah wisata di dashboard
 
     } catch (err) {
         console.error(err);
-        alert("Gagal menghapus wisata: " + err.message);
+        // Gunakan customAlert untuk error
+        window.customAlert("Gagal", "Gagal menghapus wisata: " + err.message, "error");
     } finally {
-        document.body.style.cursor = 'default';
+        document.body.style.cursor = 'default'; // Kembalikan kursor
     }
 };
 
@@ -1566,85 +1860,58 @@ document.getElementById('admin-filter-role').addEventListener('change', renderAd
 document.getElementById('admin-search-input').addEventListener('input', renderAdminUsers);
 
 window.updateUserStatus = async (uid, status) => {
-    // Terjemahkan status untuk konfirmasi agar admin paham
-    const action = status === 'active' ? 'MENYETUJUI' : 'MEMBLOKIR';
+    const actionName = status === 'active' ? 'Setujui' : 'Blokir';
+    const modalType = status === 'active' ? 'warning' : 'block'; // 'block' akan menampilkan ikon merah/orange
     
-    if(confirm(`Yakin ingin ${action} akun ini?`)) {
+    // Pesan konfirmasi yang lebih detail
+    const message = status === 'active' 
+        ? "Apakah Anda yakin ingin <b>menyetujui</b> akun ini? Wisata mereka akan langsung tayang." 
+        : "User yang <b>diblokir</b> tidak akan bisa login dan wisata mereka akan disembunyikan.";
+
+    // PANGGIL CUSTOM CONFIRM (Await response)
+    const confirmed = await window.customConfirm(
+        `${actionName} Akun?`, 
+        message, 
+        modalType
+    );
+    
+    if(confirmed) {
         try {
-            // 1. Update status di data User (Profil)
+            // 1. Update status User
             await updateDoc(doc(db, COLL_USERS, uid), { status: status });
             
-            // 2. Update status di data Destinasi (Wisata) juga!
-            // Kita pakai try-catch di sini jaga-jaga kalau user bukan manager (tidak punya doc destinasi)
+            // 2. Update status Destinasi (Jika user adalah manager)
             try {
                 const destRef = doc(db, COLL_DESTINATIONS, uid);
-                // Cek dulu apakah dokumen ada biar tidak error
                 const destSnap = await getDoc(destRef);
-                
-                if (destSnap.exists()) {
-                    await updateDoc(destRef, { status: status });
-                }
-            } catch (errDest) {
-                console.log("User ini bukan manager atau belum punya destinasi, skip update destinasi.");
-            }
+                if (destSnap.exists()) await updateDoc(destRef, { status: status });
+            } catch (errDest) { console.log("User bukan manager, skip update dest"); }
 
             showToast(`Status berhasil diubah menjadi: ${status}`);
             renderAdminUsers(); // Refresh tabel admin
-            
-        } catch (err) {
+        } catch (err) { 
             console.error(err);
-            showToast("Gagal update status: " + err.message, 'error');
+            showToast("Gagal update status: " + err.message, 'error'); 
         }
     }
+};
+
+// ADMIN: HAPUS USER
+window.deleteUser = async (uid) => {
+    // PASTI MENGGUNAKAN CUSTOM MODAL
+    const confirmed = await window.customConfirm("Hapus User?", "Data akan hilang permanen.", "danger");
+    if(!confirmed) return;
+
+    try {
+        await deleteDoc(doc(db, COLL_USERS, uid));
+        // ... (logika hapus lainnya) ...
+
+        showToast("User dihapus.");
+        renderAdminUsers(); 
+    } catch(err) { showToast(err.message, 'error'); }
 };
 // --- ADMIN: HAPUS USER (REVISI: BERSIH TOTAL BESERTA WISATA) ---
 // --- ADMIN: HAPUS USER (REVISI FINAL: WISATA TETAP TAYANG) ---
-window.deleteUser = async (uid) => {
-    if(!confirm("PERINGATAN: Menghapus User akan:\n1. Menghapus akses login & profil Manager.\n2. Menghapus semua ulasan yang ditulis orang ini.\n3. NAMUN WISATA TETAP TAYANG (Tanpa kontak).\n\nLanjutkan?")) return;
-    
-    document.body.style.cursor = 'wait';
-
-    try {
-        // 1. Hapus User Profil (Supaya gak bisa login/daftar)
-        await deleteDoc(doc(db, COLL_USERS, uid));
-        
-        // 2. [PERBAIKAN DISINI] JANGAN HAPUS WISATA, TAPI UPDATE SAJA
-        const destRef = doc(db, COLL_DESTINATIONS, uid);
-        const destSnap = await getDoc(destRef);
-
-        if (destSnap.exists()) {
-            // Kita kosongkan kontak dan beri tanda
-            await updateDoc(destRef, {
-                contact: "", // Hapus nomor HP
-                managerName: "Tanpa Pengelola", // Opsional: Penanda
-                // Status TETAP 'active' agar tetap tayang di home
-            });
-        }
-        
-        // 3. Hapus Semua Ulasan yang ditulis oleh User ini (di tempat lain)
-        const qReviews = query(collection(db, COLL_REVIEWS), where("userId", "==", uid));
-        const snapReviews = await getDocs(qReviews);
-        const deletePromises = snapReviews.docs.map(d => deleteDoc(doc(db, COLL_REVIEWS, d.id)));
-        await Promise.all(deletePromises);
-
-        showToast("Akun Pengelola dihapus. Wisata tetap tayang tanpa kontak.");
-        
-        // 4. Refresh Tabel Admin
-        renderAdminUsers(); 
-        
-        // 5. Refresh Tabel Destinasi (jika sedang terbuka)
-        const viewAdmDest = document.getElementById('admin-view-destinations');
-        if (viewAdmDest && !viewAdmDest.classList.contains('hidden')) {
-            renderAdminDestinations();
-        }
-
-    } catch(err) {
-        console.error(err);
-        alert("Terjadi kesalahan: " + err.message);
-    } finally {
-        document.body.style.cursor = 'default';
-    }
-};
 
 // --- USER PROFILE LOGIC ---
 
@@ -2006,20 +2273,25 @@ window.handleReply = async (reviewId, destId) => {
     }
 };
 
-// --- UPDATE: FUNGSI LOAD MANAGER REVIEWS (TOMBOL HAPUS SELALU MUNCUL) ---
-// --- UPDATE: FUNGSI LOAD MANAGER REVIEWS (DENGAN FOTO PROFIL) ---
+// --- UPDATE: FUNGSI LOAD MANAGER REVIEWS (CARD RAPIH & RESPONSIVE) ---
 async function loadManagerReviews(uid) {
     const list = document.getElementById('mgr-reviews-list');
     
     // Spinner Loading
-    list.innerHTML = '<div class="text-center py-6"><i class="fa-solid fa-spinner fa-spin text-2xl text-indigo-400"></i></div>';
+    list.innerHTML = '<div class="text-center py-10"><i class="fa-solid fa-spinner fa-spin text-3xl text-indigo-400"></i></div>';
 
     const q = query(collection(db, COLL_REVIEWS), where("destId", "==", uid));
     
     try {
         const snap = await getDocs(q);
         if (snap.empty) {
-            list.innerHTML = '<div class="text-center py-10 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-slate-500">Belum ada ulasan masuk.</div>';
+            list.innerHTML = `
+                <div class="text-center py-10 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                    <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400">
+                        <i class="fa-regular fa-comment-dots text-xl"></i>
+                    </div>
+                    <p class="text-slate-500 text-sm font-medium">Belum ada ulasan masuk.</p>
+                </div>`;
             return;
         }
 
@@ -2029,75 +2301,101 @@ async function loadManagerReviews(uid) {
             const rid = doc.id;
             const safeReply = r.reply ? r.reply.replace(/'/g, "&apos;") : '';
 
-            // --- LOGIKA FOTO PROFIL (BARU) ---
+            // --- LOGIKA FOTO PROFIL ---
             let avatarHtml = '';
             if (r.userPhoto && r.userPhoto.length > 20) {
-                // Jika ada foto, tampilkan img
-                avatarHtml = `<img src="${r.userPhoto}" alt="${r.userName}" class="w-10 h-10 rounded-full object-cover border border-slate-200 mr-3 bg-white shadow-sm">`;
+                avatarHtml = `<img src="${r.userPhoto}" alt="${r.userName}" class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm shrink-0">`;
             } else {
-                // Jika tidak ada, tampilkan inisial huruf dengan background abu-abu
                 avatarHtml = `
-                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold mr-3 border border-slate-200">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-500 font-bold border border-slate-200 shrink-0 shadow-sm">
                     ${r.userName.charAt(0).toUpperCase()}
                 </div>`;
             }
-            // ---------------------------------
             
-            // Section Balasan (Biarkan logika ini tetap sama)
+            // --- BAGIAN BALASAN (REPLY SECTION - FIXED WIDTH) ---
             const replySection = r.reply 
-            ? `<div id="reply-display-${rid}" class="mt-3 bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
-                <div class="flex justify-between items-start mb-2">
-                    <p class="text-xs font-bold text-indigo-700 uppercase"><i class="fa-solid fa-reply mr-1"></i> Balasan Anda</p>
-                    <div class="flex space-x-3">
-                        <button onclick="document.getElementById('reply-display-${rid}').classList.add('hidden');document.getElementById('reply-form-${rid}').classList.remove('hidden');document.getElementById('reply-input-${rid}').value = '${safeReply}';" class="text-xs text-indigo-600 font-bold hover:underline"><i class="fa-solid fa-pen"></i> Edit</button>
-                        <button onclick="window.deleteReply('${rid}', '${uid}')" class="text-xs text-red-500 font-bold hover:underline"><i class="fa-solid fa-trash"></i> Hapus</button>
+            ? `<!-- Sudah Dibalas -->
+               <div id="reply-display-${rid}" class="mt-3 bg-indigo-50/50 p-3 rounded-xl border border-indigo-100 relative group">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px]">
+                                <i class="fa-solid fa-reply"></i>
+                            </span>
+                            <span class="text-xs font-bold text-indigo-700">Respon Anda</span>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="document.getElementById('reply-display-${rid}').classList.add('hidden');document.getElementById('reply-form-${rid}').classList.remove('hidden');document.getElementById('reply-input-${rid}').value = '${safeReply}';" 
+                                class="w-6 h-6 rounded bg-white text-indigo-600 shadow-sm flex items-center justify-center hover:bg-indigo-600 hover:text-white transition border border-indigo-100">
+                                <i class="fa-solid fa-pen text-[10px]"></i>
+                            </button>
+                            <button onclick="window.deleteReply('${rid}', '${uid}')" 
+                                class="w-6 h-6 rounded bg-white text-red-500 shadow-sm flex items-center justify-center hover:bg-red-500 hover:text-white transition border border-red-100">
+                                <i class="fa-solid fa-trash text-[10px]"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <p class="text-sm text-slate-700 italic">"${r.reply}"</p>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed pl-7">"${r.reply}"</p>
                </div>
-               <div id="reply-form-${rid}" class="hidden mt-3 border-t border-slate-100 pt-3">
-                    <textarea id="reply-input-${rid}" rows="3" class="w-full border p-3 rounded-lg text-sm mb-2 focus:ring-2 focus:ring-indigo-500 outline-none">${r.reply}</textarea>
-                    <div class="flex justify-end space-x-2">
-                        <button onclick="document.getElementById('reply-display-${rid}').classList.remove('hidden'); document.getElementById('reply-form-${rid}').classList.add('hidden');" class="px-3 py-1.5 text-xs font-bold text-slate-500 bg-slate-100 rounded">Batal</button>
-                        <button onclick="window.handleReply('${rid}', '${uid}')" class="bg-indigo-600 text-white px-4 py-1.5 rounded text-xs font-bold hover:bg-indigo-700">Simpan</button>
+
+               <!-- Form Edit (Hidden) -->
+               <div id="reply-form-${rid}" class="hidden mt-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <label class="block text-xs font-bold text-slate-500 mb-2">Edit Balasan:</label>
+                    <textarea id="reply-input-${rid}" rows="2" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none mb-2 shadow-sm resize-none">${r.reply}</textarea>
+                    <div class="flex justify-end gap-2">
+                        <button onclick="document.getElementById('reply-display-${rid}').classList.remove('hidden'); document.getElementById('reply-form-${rid}').classList.add('hidden');" class="px-3 py-1.5 text-xs font-bold text-slate-500 bg-white border border-slate-200 rounded-lg hover:bg-slate-50">Batal</button>
+                        <button onclick="window.handleReply('${rid}', '${uid}')" class="px-4 py-1.5 text-xs font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-sm">Simpan</button>
                     </div>
                </div>` 
-            : `<div class="mt-4 pt-3 border-t border-slate-100">
-                <p class="text-xs text-slate-400 mb-2">Belum dibalas.</p>
-                <textarea id="reply-input-${rid}" rows="2" placeholder="Tulis balasan..." class="w-full border p-3 rounded-lg text-sm mb-2 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-                <div class="flex justify-end">
-                    <button onclick="window.handleReply('${rid}', '${uid}')" class="bg-white border border-indigo-600 text-indigo-600 px-4 py-2 rounded-lg text-xs font-bold hover:bg-indigo-50 transition"><i class="fa-solid fa-paper-plane mr-1"></i> Kirim</button>
-                </div>
+            : `<!-- Belum Dibalas -->
+               <div class="mt-3 pt-3 border-t border-slate-100">
+                    <p class="text-xs font-bold text-slate-400 mb-2 flex items-center gap-1"><i class="fa-regular fa-paper-plane"></i> Tulis Balasan:</p>
+                    <div class="flex gap-2 items-center">
+                        <input type="text" id="reply-input-${rid}" placeholder="Balas ulasan ini..." class="min-w-0 flex-grow bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition shadow-sm">
+                        <button onclick="window.handleReply('${rid}', '${uid}')" class="bg-indigo-600 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-indigo-700 shadow-md transition-transform active:scale-95 shrink-0">
+                            Kirim
+                        </button>
+                    </div>
                </div>`;
 
-            // Render HTML Card
+            // --- RENDER HTML CARD UTAMA (LAYOUT DIPERBAIKI) ---
             html += `
-            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-6 hover:shadow-md transition">
-                <div class="flex justify-between items-start mb-3">
-                    <div class="flex items-center">
-                        
-                        <!-- Panggil variabel avatarHtml di sini -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mb-4 overflow-hidden">
+                
+                <!-- Row 1: User & Rating -->
+                <div class="flex justify-between items-start gap-3 mb-3">
+                    <!-- Kiri: Foto + Nama + Tanggal -->
+                    <div class="flex items-center gap-3 min-w-0">
                         ${avatarHtml}
-                        
-                        <div>
-                            <div class="font-bold text-slate-800 text-sm">${r.userName}</div>
-                            <div class="text-xs text-slate-400">${new Date(r.date).toLocaleDateString()}</div>
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-slate-800 text-sm leading-tight truncate pr-1">${r.userName}</h4>
+                            <span class="text-[10px] font-medium text-slate-400 block mt-0.5">
+                                ${new Date(r.date).toLocaleDateString()}
+                            </span>
                         </div>
                     </div>
-                    <div class="flex flex-col items-end">
-                        <div class="text-yellow-500 text-sm mb-1">
-                            ${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}
-                        </div>
-                        
-                        <button onclick="window.deleteReview('${rid}', '${uid}', '${r.userId}')" class="text-xs text-red-400 hover:text-red-600 font-bold mt-2 transition duration-300 cursor-pointer">
-                            <i class="fa-solid fa-trash-can mr-1"></i> Hapus Ulasan
-                        </button>
-                        
+                    
+                    <!-- Kanan: Rating Badge -->
+                    <div class="shrink-0 flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
+                        <i class="fa-solid fa-star text-amber-400 text-[10px]"></i>
+                        <span class="text-xs font-bold text-amber-600">${r.rating}.0</span>
                     </div>
                 </div>
-                <div class="pl-13 mb-4">
-                     <p class="text-slate-600 text-sm leading-relaxed">"${r.comment}"</p>
+
+                <!-- Row 2: Komentar -->
+                <div class="bg-slate-50/50 p-3 rounded-xl border border-slate-100 text-sm text-slate-600 italic leading-relaxed mb-3 relative">
+                    "${r.comment}"
                 </div>
+                
+                <!-- Row 3: Tombol Hapus (Dipisah agar tidak menumpuk) -->
+                <div class="flex justify-end mb-2">
+                     <button onclick="window.deleteReview('${rid}', '${uid}', '${r.userId}')" 
+                        class="text-[10px] text-red-400 hover:text-red-600 bg-white border border-red-50 hover:bg-red-50 px-2 py-1 rounded transition flex items-center gap-1 font-bold" 
+                        title="Hapus Ulasan">
+                        <i class="fa-solid fa-trash-can"></i> Hapus Ulasan
+                    </button>
+                </div>
+
+                <!-- Row 4: Section Balasan -->
                 ${replySection}
             </div>`;
         });
@@ -2105,7 +2403,7 @@ async function loadManagerReviews(uid) {
         list.innerHTML = html;
     } catch (err) {
         console.error(err);
-        list.innerHTML = '<p class="text-red-400 text-sm text-center">Gagal memuat ulasan.</p>';
+        list.innerHTML = '<p class="text-red-400 text-sm text-center py-6">Gagal memuat ulasan.</p>';
     }
 }
 

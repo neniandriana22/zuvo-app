@@ -27,13 +27,13 @@
                 
                 <!-- Logo & Toggle Kiri -->
                <div class="flex items-center justify-between w-full md:w-auto">
-                    <div class="flex items-center flex-shrink-0 cursor-pointer hover:opacity-80 transition gap-4" id="nav-logo">
-                        <!-- Logo (Tetap Besar h-20) -->
-                        <img src="img/logo-zuvo.png" alt="Logo ZUVO" class="h-20 w-auto object-contain drop-shadow-sm">
-                        
-                        <!-- Teks ZUVO: Warna Putih agar kontras dengan background gelap -->
-                        <span class="text-4xl font-extrabold text-white tracking-tight drop-shadow-sm mt-3">ZUVO</span>
-                    </div>
+                    <div class="flex items-center flex-shrink-0 cursor-pointer hover:opacity-90 transition gap-4" id="nav-logo">
+    <!-- Gambar Logo -->
+    <img src="img/logo-zuvo.png" alt="Logo ZUVO" class="h-20 w-auto object-contain drop-shadow-sm bg-white p-2 rounded-2xl shadow-lg">
+    
+    <!-- Teks ZUVO: Class 'mt-3' SUDAH DIHAPUS agar pas di tengah secara vertikal -->
+    <span class="text-4xl font-extrabold text-white tracking-tight drop-shadow-sm">ZUVO</span>
+</div>
 
                     <!-- HAMBURGER BUTTON -->
                     <div class="flex items-center md:hidden">
@@ -71,7 +71,7 @@
                     <!-- Menu: Belum Login (Guest) -->
                     <div id="guest-menu" class="w-full md:w-auto flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-3 mt-2 md:mt-0">
                         <button id="nav-login" class="w-full md:w-auto text-center text-white/90 font-bold px-5 py-2.5 hover:text-white rounded-lg hover:bg-white/10 transition">Masuk</button>
-                        <button id="nav-register" class="w-full md:w-auto text-center bg-sky-500 text-white px-7 py-2.5 rounded-full font-bold hover:bg-sky-600 hover:shadow-lg hover:scale-105 shadow-sky-500/40 transition transform duration-200">Daftar Sekarang</button>
+                        <button id="nav-register" class="w-full md:w-auto text-center bg-white text-sky-600 px-7 py-2.5 rounded-full font-bold hover:bg-slate-100 hover:shadow-lg hover:scale-105 shadow-md transition transform duration-200">Daftar Sekarang</button>
                     </div>
                 </div>
             </div>
@@ -85,38 +85,65 @@
         <section id="view-home" class="view-section">
             <!-- Hero Banner -->
             <div class="bg-gradient-to-r from-sky-500 to-indigo-600 rounded-3xl p-8 mb-10 text-white shadow-xl relative overflow-hidden">
-                <div class="relative z-10 max-w-2xl">
+                <!-- UBAH JADI max-w-7xl AGAR MEMANJANG -->
+<div class="relative z-10 max-w-7xl w-full">
                     <h1 class="text-4xl md:text-5xl font-bold mb-4">Jelajahi Keindahan Tak Terbatas di Jambi</h1>
                     <p class="text-lg opacity-90 mb-6">Temukan destinasi tersembunyi, bagikan cerita seru, dan mulailah petualangan tak terlupakanmu hari ini bersama Zuvo.</p>
                     
-                    <!-- Search & Filter -->
-                    <div class="bg-white p-2 rounded-xl shadow-lg flex flex-col md:flex-row gap-2">
-    <div class="flex-grow flex items-center px-4 bg-slate-50 rounded-lg">
-        <i class="fa-solid fa-search text-slate-400 mr-2"></i>
-        <input type="text" id="search-input" placeholder="Cari pantai, gunung, atau kota..." class="w-full bg-transparent outline-none py-3 text-slate-700">
+                    <!-- Search & Filter (VERSI WIDE: SATU BARIS PENUH) -->
+<div class="bg-white p-3 rounded-xl shadow-lg flex flex-col lg:flex-row gap-3 relative z-20 w-full">
+    
+    <!-- 1. Input Pencarian (Flex-grow agar mengisi ruang sisa) -->
+    <div class="flex-grow relative group w-full lg:w-auto">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <i class="fa-solid fa-magnifying-glass text-slate-400 group-focus-within:text-sky-500 transition-colors"></i>
+        </div>
+        <input type="text" id="search-input" placeholder="Cari pantai, gunung, atau kota..." 
+               class="w-full bg-slate-50 border border-transparent focus:bg-white focus:border-sky-300 focus:ring-4 focus:ring-sky-100 text-slate-700 font-medium py-3 pl-12 pr-4 rounded-xl outline-none transition-all placeholder:text-slate-400 text-sm truncate">
     </div>
-    <!-- Filter Kategori Lama -->
-    <select id="filter-category" class="bg-slate-50 text-slate-700 px-4 py-3 rounded-lg outline-none border-none cursor-pointer hover:bg-slate-100">
-        <option value="all">Semua Kategori</option>
-        <option value="Alam">Wisata Alam</option>
-        <option value="Kuliner">Wisata Kuliner</option>
-        <option value="Sejarah">Sejarah & Budaya</option>
-    </select>
-    <!-- DROPDOWN SORTING BARU -->
-    <select id="sort-options" class="bg-slate-50 text-slate-700 px-4 py-3 rounded-lg outline-none border-none cursor-pointer hover:bg-slate-100">
-        <option value="latest">Terbaru</option>
-        <option value="highest_rating">Rating Tertinggi</option>
-    </select>
-    <button id="btn-search" class="bg-sky-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-sky-700 transition">
-        Cari
+
+    <!-- 2. Filter Kategori -->
+    <div class="relative group w-full lg:w-[220px] shrink-0">
+        <select id="filter-category" 
+                class="w-full bg-slate-50 border border-transparent focus:bg-white focus:border-sky-300 focus:ring-4 focus:ring-sky-100 text-slate-700 font-bold py-3 pl-4 pr-10 rounded-xl outline-none transition-all appearance-none cursor-pointer text-sm truncate">
+            <option value="all">📂 Semua Kategori</option>
+            <option value="Alam">🌲 Wisata Alam</option>
+            <option value="Kuliner">🍽️ Wisata Kuliner</option>
+            <option value="Sejarah">🏛️ Sejarah & Budaya</option>
+            <option value="Rekreasi">🎡 Taman Rekreasi</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+            <i class="fa-solid fa-chevron-down text-xs"></i>
+        </div>
+    </div>
+
+    <!-- 3. Filter Sorting -->
+    <div class="relative group w-full lg:w-[200px] shrink-0">
+        <select id="sort-options" 
+                class="w-full bg-slate-50 border border-transparent focus:bg-white focus:border-indigo-300 focus:ring-4 focus:ring-indigo-100 text-slate-700 font-bold py-3 pl-4 pr-10 rounded-xl outline-none transition-all appearance-none cursor-pointer text-sm truncate">
+            <option value="latest">⏱️ Terbaru</option>
+            <option value="highest_rating">⭐ Rating Tertinggi</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+            <i class="fa-solid fa-chevron-down text-xs"></i>
+        </div>
+    </div>
+
+    <!-- 4. Tombol Cari -->
+    <button id="btn-search" class="w-full lg:w-auto bg-gradient-to-r from-sky-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-sky-200 transform hover:-translate-y-0.5 transition duration-200 flex items-center justify-center gap-2 active:scale-95 shrink-0">
+        <i class="fa-solid fa-paper-plane"></i> <span>Cari</span>
     </button>
 </div>
+
                 </div>
                 <i class="fa-solid fa-plane-departure absolute -right-10 -bottom-10 text-9xl text-white opacity-20 transform -rotate-12"></i>
             </div>
 
             <div class="mb-6 flex items-center justify-between">
-                <h2 class="text-2xl font-bold text-slate-800">Rekomendasi Destinasi</h2>
+                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-compass text-sky-600 text-3xl"></i>
+                    Rekomendasi Destinasi
+                </h2>
             </div>
 
             <!-- Container List Destinasi -->
@@ -125,9 +152,18 @@
             </div>
         </section>
 
-       <!-- VIEW 2: LOGIN (SUDAH ADA ICON MATA & LINK LUPA PASSWORD) -->
+       <!-- VIEW 2: LOGIN -->
         <section id="view-login" class="view-section hidden max-w-md mx-auto mt-10">
-            <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100">
+            
+            <!-- [BARU] FOTO LATAR BELAKANG -->
+            <div class="fixed inset-0 z-0">
+                <img src="img/latar-form.jpg" class="w-full h-full object-cover">
+                <!-- Overlay gelap agar form lebih kontras -->
+                <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+            </div>
+
+            <!-- KOTAK FORM: Tambahkan 'relative z-10' agar muncul DI ATAS gambar -->
+            <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 relative z-10">
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fa-solid fa-right-to-bracket text-2xl text-sky-600"></i>
@@ -189,7 +225,15 @@
 
         <!-- VIEW: LUPA PASSWORD (BARU) -->
         <section id="view-forgot-password" class="view-section hidden max-w-md mx-auto mt-10">
-            <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100">
+            
+            <!-- [BARU] FOTO LATAR BELAKANG -->
+            <div class="fixed inset-0 z-0">
+                <img src="img/latar-form.jpg" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+            </div>
+
+            <!-- KOTAK FORM: Tambahkan 'relative z-10' -->
+            <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 relative z-10">
                 <div class="text-center mb-8">
                     <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fa-solid fa-key text-2xl text-yellow-600"></i>
@@ -222,407 +266,674 @@
         </section>
 
         <!-- VIEW 3: REGISTER (DENGAN ICON & VALIDASI UI) -->
-<section id="view-register" class="view-section hidden max-w-lg mx-auto mt-4">
-    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-slate-100">
-        <div class="text-center mb-6">
-            <h2 class="text-2xl font-bold text-slate-800">Buat Akun Baru</h2>
-            <p class="text-xs text-slate-400 mt-1">Bergabunglah bersama komunitas kami</p>
-        </div>
-        
-        <!-- Role Switcher -->
-        <div class="flex bg-slate-100 p-1 rounded-xl mb-6 relative">
-            <div id="role-indicator" class="absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm transition-all duration-300"></div>
-            <button id="btn-role-user" class="flex-1 relative z-10 py-2 rounded-lg text-sm font-bold transition text-sky-600">User Umum</button>
-            <button id="btn-role-manager" class="flex-1 relative z-10 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 transition">Pengelola</button>
-        </div>
-
-        <form id="form-register" class="space-y-4">
-            <input type="hidden" id="reg-role" value="user">
+        <section id="view-register" class="view-section hidden max-w-lg mx-auto mt-4">
             
-            <!-- Khusus Manager -->
-            <div id="manager-fields" class="hidden space-y-4 border-b border-slate-200 pb-4 mb-4 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-                <div class="flex items-start gap-3 bg-yellow-50 p-3 rounded-lg border border-yellow-100">
-                    <i class="fa-solid fa-triangle-exclamation text-yellow-500 mt-0.5 text-xs"></i>
-                    <p class="text-xs text-yellow-700 leading-tight">Akun pengelola memerlukan <b>verifikasi Admin</b> sebelum wisata Anda dapat ditampilkan ke publik.</p>
+            <!-- [BARU] FOTO LATAR BELAKANG -->
+            <div class="fixed inset-0 z-0">
+                <img src="img/latar-form.jpg" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+            </div>
+
+            <!-- KOTAK FORM: Tambahkan 'relative z-10' -->
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-slate-100 relative z-10">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-slate-800">Buat Akun Baru</h2>
+                    <p class="text-xs text-slate-400 mt-1">Bergabunglah bersama komunitas kami</p>
                 </div>
                 
-                <!-- Input Nama Wisata -->
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-umbrella-beach text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
-                    </div>
-                    <input type="text" id="reg-dest-name" placeholder="Nama Destinasi Wisata" class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm bg-white">
+                <!-- Role Switcher -->
+                <div class="flex bg-slate-100 p-1 rounded-xl mb-6 relative">
+                    <div id="role-indicator" class="absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm transition-all duration-300"></div>
+                    <button id="btn-role-user" class="flex-1 relative z-10 py-2 rounded-lg text-sm font-bold transition text-sky-600">User Umum</button>
+                    <button id="btn-role-manager" class="flex-1 relative z-10 py-2 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 transition">Pengelola</button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <!-- Kontak -->
-                    <div class="relative group">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-phone text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
-                        </div>
-                        <input type="tel" id="reg-contact" placeholder="No. HP / WA" class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm bg-white">
-                    </div>
-                    <!-- Alamat -->
-                    <div class="relative group">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-map-pin text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
-                        </div>
-                        <input id="reg-address" type="text" placeholder="Alamat" class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm bg-white">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Input Nama Lengkap -->
-            <div>
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-user text-slate-400 group-focus-within:text-sky-500 transition-colors"></i>
-                    </div>
-                    <input type="text" id="reg-name" required placeholder="Nama Lengkap" 
-                           class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all text-sm font-medium text-slate-700">
-                </div>
-                <p id="err-name" class="text-[10px] text-red-500 mt-1 hidden ml-2"><i class="fa-solid fa-circle-xmark mr-1"></i> Nama hanya boleh huruf.</p>
-            </div>
-
-            <!-- Input Email -->
-            <div>
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-at text-slate-400 group-focus-within:text-sky-500 transition-colors"></i>
-                    </div>
-                    <input type="email" id="reg-email" required placeholder="Alamat Email" 
-                           class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all text-sm font-medium text-slate-700">
-                </div>
-            </div>
-
-            <!-- Input Password -->
-            <div>
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-lock text-slate-400 group-focus-within:text-sky-500 transition-colors"></i>
-                    </div>
-                    <input type="password" id="reg-password" required placeholder="Buat Password Kuat" 
-                           class="w-full pl-12 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all text-sm font-medium text-slate-700">
+                <form id="form-register" class="space-y-4">
+                    <input type="hidden" id="reg-role" value="user">
                     
-                    <!-- Icon Toggle Password (Mata) -->
-                    <div onclick="togglePasswordVisibility('reg-password', this)" class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer text-slate-400 hover:text-slate-600">
-                        <i class="fa-solid fa-eye"></i>
-                    </div>
-                </div>
-                
-                <!-- Indikator Validasi Password -->
-                <div id="password-rules" class="mt-2 p-3 bg-slate-50 rounded-lg border border-slate-100 hidden">
-                    <p class="text-[10px] font-bold text-slate-500 mb-1">Password harus memiliki:</p>
-                    <ul class="space-y-1">
-                        <li id="rule-length" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Minimal 8 karakter</li>
-                        <li id="rule-upper" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Huruf Besar (A-Z)</li>
-                        <li id="rule-lower" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Huruf Kecil (a-z)</li>
-                        <li id="rule-number" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Angka (0-9)</li>
-                        <li id="rule-special" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Karakter Unik (!@#$%-_)</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-sky-200 hover:shadow-sky-300 transform hover:-translate-y-0.5 transition-all duration-200">
-                Daftar Sekarang
-            </button>
-        </form>
-        <div class="mt-6 text-center text-sm text-slate-600">
-            Sudah punya akun? <button id="link-to-login" class="text-sky-600 font-bold hover:text-sky-700 hover:underline transition">Masuk</button>
-        </div>
-    </div>
-</section>
-
-        <!-- VIEW 4: DASHBOARD ADMIN (UPDATED) -->
-<section id="view-admin" class="view-section hidden">
-    <div class="flex justify-between items-center mb-8">
-        <div>
-            <h2 class="text-2xl font-bold text-slate-800">Dashboard Admin</h2>
-            <p class="text-slate-500">Pusat kendali aplikasi ZUVO</p>
-        </div>
-        <span class="bg-purple-100 text-purple-700 px-4 py-1 rounded-full text-sm font-bold shadow-sm">Administrator</span>
-    </div>
-
-    <!-- STATS CARDS (4 KOLOM) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center">
-            <div class="text-slate-500 text-xs font-bold uppercase mb-1">Total User</div>
-            <div class="text-3xl font-bold text-sky-600" id="stat-users-count">0</div>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center">
-            <div class="text-slate-500 text-xs font-bold uppercase mb-1">Total Manager</div>
-            <div class="text-3xl font-bold text-indigo-600" id="stat-managers-count">0</div>
-        </div>
-        <!-- CARD BARU: TOTAL WISATA -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center border-l-4 border-l-emerald-500">
-            <div class="text-slate-500 text-xs font-bold uppercase mb-1">Total Wisata</div>
-            <div class="text-3xl font-bold text-emerald-600" id="stat-dest-count">0</div>
-        </div>
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col justify-center">
-            <div class="text-slate-500 text-xs font-bold uppercase mb-1">Perlu Konfirmasi</div>
-            <div class="text-3xl font-bold text-yellow-500" id="stat-pending-count">0</div>
-        </div>
-    </div>
-
-    <!-- MAIN CONTAINER -->
-    <div class="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden min-h-[600px]">
-        
-        <!-- HEADER & TABS -->
-        <div class="p-6 border-b border-slate-100 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            
-            <!-- TABS SWITCHER (FIT 1 FRAME - NO SCROLL) -->
-            <div class="flex bg-slate-100 p-1 rounded-lg w-full md:w-auto">
-                
-                <!-- flex-1: Agar lebar tombol terbagi rata -->
-                <!-- text-[10px] md:text-sm: Teks kecil di HP, normal di Laptop -->
-                <!-- px-2: Padding kecil di HP agar muat -->
-                
-                <button id="admin-tab-users" class="flex-1 px-2 py-2 md:px-4 rounded-md text-[10px] md:text-sm font-bold shadow-sm bg-white text-slate-800 transition text-center whitespace-nowrap">
-                    <i class="fa-solid fa-users md:mr-2 mr-1"></i> Data Akun
-                </button>
-                
-                <button id="admin-tab-destinations" class="flex-1 px-2 py-2 md:px-4 rounded-md text-[10px] md:text-sm font-bold text-slate-500 hover:text-slate-700 transition text-center whitespace-nowrap">
-                    <i class="fa-solid fa-map-location-dot md:mr-2 mr-1"></i> Kelola Destinasi
-                </button>
-            </div>
-
-            <!-- SEARCH & FILTER -->
-            <div class="flex flex-col md:flex-row gap-2 w-full lg:w-auto">
-                <div class="relative w-full md:w-64">
-                    <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-sm"></i>
-                    <input type="text" id="admin-search-input" placeholder="Cari nama, email, atau wisata..." class="border rounded-lg pl-9 pr-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-500 w-full">
-                </div>
-                
-                <!-- Filter Role (Hanya Tab User) -->
-                <select id="admin-filter-role" class="border rounded-lg px-3 py-2 text-sm bg-slate-50 cursor-pointer outline-none focus:ring-2 focus:ring-sky-500">
-                    <option value="all">Semua Role</option>
-                    <option value="manager">Pengelola</option>
-                    <option value="user">User Umum</option>
-                </select>
-
-                <!-- Filter Kategori (Hanya Tab Destinasi - Awalnya Hidden) -->
-                <select id="admin-filter-category" class="border rounded-lg px-3 py-2 text-sm bg-slate-50 cursor-pointer outline-none focus:ring-2 focus:ring-emerald-500 hidden">
-                    <option value="all">Semua Kategori</option>
-                    <option value="Alam">Wisata Alam</option>
-                    <option value="Kuliner">Wisata Kuliner</option>
-                    <option value="Sejarah">Sejarah & Budaya</option>
-                    <option value="Rekreasi">Taman Rekreasi</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- TAB CONTENT 1: TABLE USERS -->
-        <div id="admin-view-users" class="overflow-x-auto rounded-lg border border-slate-200">
-            <table class="w-full text-left border-collapse bg-white">
-                <thead class="bg-slate-50">
-                    <tr class="text-slate-500 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
-                        <th class="px-6 py-4 font-semibold">Info Pengguna</th>
-                        <th class="px-6 py-4 font-semibold whitespace-nowrap">Role</th>
-                        <th class="px-6 py-4 font-semibold whitespace-nowrap">Info Wisata</th>
-                        <th class="px-6 py-4 font-semibold whitespace-nowrap text-center">Status</th>
-                        <th class="px-6 py-4 font-semibold text-right whitespace-nowrap">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-users-list" class="text-sm text-slate-700 divide-y divide-slate-100">
-                    <!-- Render JS -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- TAB CONTENT 2: TABLE DESTINATIONS -->
-        <div id="admin-view-destinations" class="overflow-x-auto hidden rounded-lg border border-slate-200">
-            <table class="w-full text-left border-collapse bg-white">
-                <thead class="bg-emerald-50">
-                    <tr class="text-emerald-700 text-xs font-bold uppercase tracking-wider border-b border-emerald-100">
-                        <th class="px-6 py-4 font-semibold">Info Destinasi</th>
-                        <th class="px-6 py-4 font-semibold whitespace-nowrap">Kategori</th>
-                        <th class="px-6 py-4 font-semibold whitespace-nowrap">Pengelola</th>
-                        <th class="px-6 py-4 font-semibold whitespace-nowrap text-center">Rating</th>
-                        <th class="px-6 py-4 font-semibold text-right whitespace-nowrap">Kelola</th>
-                    </tr>
-                </thead>
-                <tbody id="admin-dest-list" class="text-sm text-slate-700 divide-y divide-slate-100">
-                    <!-- Render JS -->
-                </tbody>
-            </table>
-        </div>
-</section>
-
-        <!-- VIEW 5: DASHBOARD PENGELOLA -->
-        <section id="view-manager" class="view-section hidden">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-800">Dashboard Pengelola</h2>
-                    <p class="text-slate-500">Kelola destinasi wisatamu</p>
-                </div>
-                <span class="bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-sm font-bold">Pengelola</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <div class="text-slate-500 text-sm mb-1">Total Ulasan</div>
-                    <div class="text-3xl font-bold text-sky-600" id="mgr-total-reviews">0</div>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <div class="text-slate-500 text-sm mb-1">Rating Rata-rata</div>
-                    <div class="flex items-center">
-                        <span class="text-3xl font-bold text-yellow-500 mr-2" id="mgr-avg-rating">0.0</span>
-                        <i class="fa-solid fa-star text-yellow-400"></i>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="window.deleteReview('${rid}', '${uid}', '${r.userId}')" 
-        class="text-xs text-red-400 hover:text-red-600 font-bold mt-2 opacity-0 group-hover:opacity-100 transition duration-300"
-        title="Hapus ulasan ini secara permanen">
-    <i class="fa-solid fa-trash-can mr-1"></i> Hapus Ulasan
-</button>
-
-            <div class="flex border-b border-slate-200 mb-6">
-                <button id="tab-mgr-edit" class="px-6 py-3 text-sm font-medium active-tab">Kelola Destinasi</button>
-                <button id="tab-mgr-reviews" class="px-6 py-3 text-sm font-medium text-slate-500 hover:text-slate-700">Ulasan Masuk</button>
-            </div>
-
-            <!-- Tab Edit -->
-            <div id="mgr-content-edit">
-                <form id="form-update-dest" class="bg-white p-8 rounded-xl shadow-lg border border-slate-100">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Destinasi</label>
-                            <input type="text" id="edit-dest-name" required class="w-full px-4 py-3 rounded-lg border border-slate-300">
+                    <!-- Khusus Manager -->
+                    <div id="manager-fields" class="hidden space-y-4 border-b border-slate-200 pb-4 mb-4 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                        <div class="flex items-start gap-3 bg-yellow-50 p-3 rounded-lg border border-yellow-100">
+                            <i class="fa-solid fa-triangle-exclamation text-yellow-500 mt-0.5 text-xs"></i>
+                            <p class="text-xs text-yellow-700 leading-tight">Akun pengelola memerlukan <b>verifikasi Admin</b> sebelum wisata Anda dapat ditampilkan ke publik.</p>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Kategori</label>
-                            <select id="edit-dest-category" class="w-full px-4 py-3 rounded-lg border border-slate-300">
-                                <option value="Alam">Wisata Alam</option>
-                                <option value="Kuliner">Wisata Kuliner</option>
-                                <option value="Sejarah">Sejarah & Budaya</option>
-                                <option value="Rekreasi">Taman Rekreasi</option>
-                            </select>
+                        
+                        <!-- Input Nama Wisata -->
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-umbrella-beach text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                            </div>
+                            <input type="text" id="reg-dest-name" placeholder="Nama Destinasi Wisata" class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm bg-white">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- Kontak -->
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-phone text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                                </div>
+                                <input type="tel" id="reg-contact" placeholder="No. HP / WA" class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm bg-white">
+                            </div>
+                            <!-- Alamat -->
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-map-pin text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                                </div>
+                                <input id="reg-address" type="text" placeholder="Alamat" class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm bg-white">
+                            </div>
                         </div>
                     </div>
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Lokasi (Koordinat GeoPoint)</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="edit-dest-lat" placeholder="Latitude" class="w-1/2 px-4 py-3 rounded-lg border border-slate-300">
-                            <input type="text" id="edit-dest-lng" placeholder="Longitude" class="w-1/2 px-4 py-3 rounded-lg border border-slate-300">
+
+                    <!-- Input Nama Lengkap -->
+                    <div>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-user text-slate-400 group-focus-within:text-sky-500 transition-colors"></i>
+                            </div>
+                            <input type="text" id="reg-name" required placeholder="Nama Lengkap" 
+                                   class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all text-sm font-medium text-slate-700">
                         </div>
-                        <p class="text-xs text-slate-400 mt-1">Ambil dari Google Maps (klik kanan > ada angka koordinat).</p>
+                        <p id="err-name" class="text-[10px] text-red-500 mt-1 hidden ml-2"><i class="fa-solid fa-circle-xmark mr-1"></i> Nama hanya boleh huruf.</p>
                     </div>
-                    <div class="mb-6">
-    <label class="block text-sm font-medium text-slate-700 mb-1">Foto Utama Destinasi</label>
-    <!-- Preview Gambar -->
-    <div class="mb-3">
-        <p class="text-xs text-slate-500 mb-1">Preview Saat Ini:</p>
-        <img id="preview-current-img" src="" alt="Preview" class="h-32 w-auto rounded-lg border border-slate-200 shadow-sm object-cover" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
-    </div>
-    <!-- Input File -->
-    <input type="file" id="edit-dest-file" accept="image/*" class="w-full px-4 py-3 rounded-lg border border-slate-300 bg-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition">
-    <p class="text-xs text-slate-400 mt-1">Format: JPG, PNG. Biarkan kosong jika tidak ingin mengganti foto.</p>
-</div>
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Deskripsi Lengkap</label>
-                        <textarea id="edit-dest-desc" rows="5" required class="w-full px-4 py-3 rounded-lg border border-slate-300"></textarea>
+
+                    <!-- Input Email -->
+                    <div>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-at text-slate-400 group-focus-within:text-sky-500 transition-colors"></i>
+                            </div>
+                            <input type="email" id="reg-email" required placeholder="Alamat Email" 
+                                   class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all text-sm font-medium text-slate-700">
+                        </div>
                     </div>
-                    <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">
-                        <i class="fa-solid fa-save mr-2"></i> Simpan Perubahan
+
+                    <!-- Input Password -->
+                    <div>
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-lock text-slate-400 group-focus-within:text-sky-500 transition-colors"></i>
+                            </div>
+                            <input type="password" id="reg-password" required placeholder="Buat Password Kuat" 
+                                   class="w-full pl-12 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none transition-all text-sm font-medium text-slate-700">
+                            
+                            <div onclick="togglePasswordVisibility('reg-password', this)" class="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer text-slate-400 hover:text-slate-600">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                        </div>
+                        
+                        <div id="password-rules" class="mt-2 p-3 bg-slate-50 rounded-lg border border-slate-100 hidden">
+                            <p class="text-[10px] font-bold text-slate-500 mb-1">Password harus memiliki:</p>
+                            <ul class="space-y-1">
+                                <li id="rule-length" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Minimal 8 karakter</li>
+                                <li id="rule-upper" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Huruf Besar (A-Z)</li>
+                                <li id="rule-lower" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Huruf Kecil (a-z)</li>
+                                <li id="rule-number" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Angka (0-9)</li>
+                                <li id="rule-special" class="text-[10px] text-slate-400 flex items-center"><i class="fa-solid fa-circle mr-2 text-[6px]"></i> Karakter Unik (!@#$%-_)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-sky-200 hover:shadow-sky-300 transform hover:-translate-y-0.5 transition-all duration-200">
+                        Daftar Sekarang
                     </button>
                 </form>
-            </div>
-
-            <!-- Tab Reviews -->
-            <div id="mgr-content-reviews" class="hidden space-y-4">
-                <div id="mgr-reviews-list"></div>
+                <div class="mt-6 text-center text-sm text-slate-600">
+                    Sudah punya akun? <button id="link-to-login" class="text-sky-600 font-bold hover:text-sky-700 hover:underline transition">Masuk</button>
+                </div>
             </div>
         </section>
 
-        <!-- VIEW 6: DETAIL WISATA (LAYOUT MOBILE FIXED) -->
-        <section id="view-detail" class="view-section hidden">
-            <button id="btn-back-home" class="mb-4 text-slate-500 hover:text-slate-800 flex items-center text-sm font-medium">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Kembali
-            </button>
+      <!-- VIEW 4: DASHBOARD ADMIN (FINAL FIXED UI) -->
+<section id="view-admin" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- 1. HEADER DASHBOARD -->
+    <div class="flex flex-col md:flex-row justify-between items-end gap-4 mb-8 border-b border-slate-200 pb-6">
+        <div>
+            <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Dashboard Admin</h2>
+            <p class="text-slate-500 text-sm mt-1 font-medium">Ringkasan performa dan manajemen data terpusat.</p>
+        </div>
+        <div class="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-bold text-xs shadow-sm border border-indigo-100">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </span>
+            ADMINISTRATOR
+        </div>
+    </div>
 
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
-                
-                <!-- 1. FOTO UTAMA (HERO IMAGE) - Posisi Paling Atas -->
-                <div class="h-56 md:h-96 w-full relative overflow-hidden bg-slate-900">
-                    <img id="detail-img-bg" src="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-50">
-                    <img id="detail-img" src="" class="relative w-full h-full object-contain z-10 p-2 md:p-0">
-                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 to-transparent p-4 md:p-8 z-20">
-                        <span id="detail-category" class="bg-sky-500 text-white text-[10px] md:text-xs px-2 py-1 rounded-full mb-2 inline-block">Kategori</span>
-                        <h1 id="detail-title" class="text-2xl md:text-4xl font-bold text-white leading-tight">Judul Wisata</h1>
-                        <p id="detail-address" class="text-slate-300 text-xs md:text-sm mt-1 truncate">Alamat...</p>
+    <!-- 2. STATS CARDS (DESAIN PREMIUM SEBELUMNYA) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        
+        <!-- Card 1: Total User (Blue) -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+            <div class="absolute right-0 top-0 h-full w-1 bg-blue-500"></div>
+            <div class="relative z-10 flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-blue-500 uppercase tracking-wider mb-2">Total User</p>
+                    <h3 class="text-4xl font-extrabold text-slate-800" id="stat-users-count">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-400">
+                <i class="fa-solid fa-circle-check text-blue-500 mr-1.5"></i> Akun Terdaftar
+            </div>
+        </div>
+
+        <!-- Card 2: Total Manager (Indigo) -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+            <div class="absolute right-0 top-0 h-full w-1 bg-indigo-500"></div>
+            <div class="relative z-10 flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-2">Total Manager</p>
+                    <h3 class="text-4xl font-extrabold text-slate-800" id="stat-managers-count">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-400">
+                <i class="fa-solid fa-shop text-indigo-500 mr-1.5"></i> Pengelola Wisata
+            </div>
+        </div>
+
+        <!-- Card 3: Total Wisata (Emerald) -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+            <div class="absolute right-0 top-0 h-full w-1 bg-emerald-500"></div>
+            <div class="relative z-10 flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2">Total Wisata</p>
+                    <h3 class="text-4xl font-extrabold text-slate-800" id="stat-dest-count">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-400">
+                <i class="fa-solid fa-globe text-emerald-500 mr-1.5"></i> Destinasi Aktif
+            </div>
+        </div>
+
+        <!-- Card 4: Perlu Konfirmasi (Amber/Warning) -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+            <div class="absolute right-0 top-0 h-full w-1 bg-amber-500"></div>
+            <div class="relative z-10 flex justify-between items-start">
+                <div>
+                    <p class="text-xs font-bold text-amber-500 uppercase tracking-wider mb-2">Perlu Review</p>
+                    <h3 class="text-4xl font-extrabold text-slate-800" id="stat-pending-count">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl animate-pulse">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-400">
+                <span class="text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded mr-2">Action Needed</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. MAIN CONTENT (TOOLBAR & TABEL) -->
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden min-h-[600px] flex flex-col">
+        
+        <!-- A. UNIFIED TOOLBAR (Konsisten untuk Semua Tab) -->
+        <div class="p-5 border-b border-slate-200 bg-slate-50 flex flex-col lg:flex-row justify-between gap-4">
+            
+            <!-- Tab Switcher (Kiri) -->
+            <div class="bg-slate-200/50 p-1.5 rounded-xl flex w-full lg:w-auto">
+                <button id="admin-tab-users" class="flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold shadow-sm bg-white text-indigo-700 transition-all duration-300 flex items-center justify-center gap-2 border border-slate-200/50">
+                    <i class="fa-solid fa-users"></i> Data Akun
+                </button>
+                <button id="admin-tab-destinations" class="flex-1 lg:flex-none px-6 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-white/50 transition-all duration-300 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-map-location-dot"></i> Kelola Wisata
+                </button>
+            </div>
+
+            <!-- Search & Filters (Kanan) -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-64">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                    </div>
+                    <input type="text" id="admin-search-input" placeholder="Cari data..." 
+                           class="w-full bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block pl-10 p-2.5 transition-shadow shadow-sm outline-none font-medium h-full">
+                </div>
+
+                <!-- SINGLE FILTER WRAPPER (Menyatukan Role & Kategori agar posisi konsisten) -->
+                <div class="relative w-full sm:w-48">
+                    <!-- Ikon Filter (Sama untuk keduanya) -->
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-filter text-slate-500"></i>
+                    </div>
+                    
+                    <!-- Filter Role (Default Visible) -->
+                    <select id="admin-filter-role" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 p-2.5 cursor-pointer font-bold shadow-sm h-full outline-none appearance-none">
+                        <option value="all">Semua Role</option>
+                        <option value="manager">Pengelola</option>
+                        <option value="user">User Umum</option>
+                    </select>
+
+                    <!-- Filter Kategori (Default Hidden) - Ditempatkan di wrapper yang SAMA agar tidak ada gap -->
+                    <select id="admin-filter-category" class="hidden bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full pl-10 p-2.5 cursor-pointer font-bold shadow-sm h-full outline-none appearance-none">
+                        <option value="all">Semua Kategori</option>
+                        <option value="Alam">Wisata Alam</option>
+                        <option value="Kuliner">Wisata Kuliner</option>
+                        <option value="Sejarah">Sejarah & Budaya</option>
+                        <option value="Rekreasi">Rekreasi</option>
+                    </select>
+
+                    <!-- Ikon Panah (Sama untuk keduanya) -->
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-chevron-down text-slate-400 text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- B. TABEL DATA (Scrollable) -->
+        <div class="flex-grow overflow-auto bg-white">
+            
+            <!-- TABEL 1: USERS (Theme: Indigo - Dipertegas Warnanya) -->
+            <div id="admin-view-users" class="min-w-full inline-block align-middle">
+                <table class="min-w-full divide-y divide-indigo-100">
+                    <thead class="bg-indigo-100 sticky top-0 z-10">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-extrabold text-indigo-900 uppercase tracking-wider">Pengguna</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-extrabold text-indigo-900 uppercase tracking-wider">Role & Izin</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-extrabold text-indigo-900 uppercase tracking-wider">Info Wisata</th>
+                            <th scope="col" class="px-6 py-4 text-center text-xs font-extrabold text-indigo-900 uppercase tracking-wider">Status Akun</th>
+                            <th scope="col" class="px-6 py-4 text-right text-xs font-extrabold text-indigo-900 uppercase tracking-wider">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-list" class="bg-white divide-y divide-slate-100 text-sm text-slate-700">
+                        <!-- Render JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TABEL 2: DESTINATIONS (Theme: Emerald - Dipertegas Warnanya) -->
+            <div id="admin-view-destinations" class="hidden min-w-full inline-block align-middle">
+                <table class="min-w-full divide-y divide-emerald-100">
+                    <thead class="bg-emerald-100 sticky top-0 z-10">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-extrabold text-emerald-900 uppercase tracking-wider">Info Destinasi</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-extrabold text-emerald-900 uppercase tracking-wider">Kategori</th>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-extrabold text-emerald-900 uppercase tracking-wider">Pemilik (Owner)</th>
+                            <th scope="col" class="px-6 py-4 text-center text-xs font-extrabold text-emerald-900 uppercase tracking-wider">Rating</th>
+                            <th scope="col" class="px-6 py-4 text-right text-xs font-extrabold text-emerald-900 uppercase tracking-wider">Kontrol</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-dest-list" class="bg-white divide-y divide-slate-100 text-sm text-slate-700">
+                        <!-- Render JS -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+        <!-- VIEW 5: DASHBOARD PENGELOLA (RESPONSIVE & PROFESSIONAL) -->
+        <section id="view-manager" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+            
+            <!-- 1. HEADER DASHBOARD -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8 border-b border-slate-200 pb-6">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">Dashboard Pengelola</h2>
+                    <p class="text-slate-500 text-sm mt-1 font-medium leading-relaxed">Manajemen konten destinasi dan interaksi pengunjung.</p>
+                </div>
+                <div class="flex items-center gap-2 bg-sky-50 text-sky-700 px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-bold text-[10px] md:text-xs shadow-sm border border-sky-100 self-start md:self-auto">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                    </span>
+                    PENGELOLA WISATA
+                </div>
+            </div>
+
+            <!-- 2. STATS CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8">
+                <!-- Card Ulasan -->
+                <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(14,165,233,0.15)] relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute right-0 top-0 h-full w-1 bg-sky-500"></div>
+                    <div class="flex justify-between items-start z-10 relative">
+                        <div>
+                            <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">Total Ulasan</p>
+                            <h3 class="text-3xl md:text-4xl font-black text-slate-800" id="mgr-total-reviews">0</h3>
+                        </div>
+                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-lg md:text-xl">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 md:mt-4 text-[10px] md:text-xs text-slate-400 font-medium">
+                        <i class="fa-solid fa-chart-line text-sky-500 mr-1"></i> Interaksi Total
                     </div>
                 </div>
 
-                <!-- GRID LAYOUT CONTENT -->
-                <div class="p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Card Rating -->
+                <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(245,158,11,0.15)] relative overflow-hidden group hover:-translate-y-1 transition-transform duration-300">
+                    <div class="absolute right-0 top-0 h-full w-1 bg-amber-500"></div>
+                    <div class="flex justify-between items-start z-10 relative">
+                        <div>
+                            <p class="text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2">Rating Rata-rata</p>
+                            <div class="flex items-baseline gap-2">
+                                <h3 class="text-3xl md:text-4xl font-black text-slate-800" id="mgr-avg-rating">0.0</h3>
+                                <span class="text-amber-400 text-base md:text-lg"><i class="fa-solid fa-star"></i></span>
+                            </div>
+                        </div>
+                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg md:text-xl">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                    </div>
+                    <div class="mt-3 md:mt-4 text-[10px] md:text-xs text-slate-400 font-medium">
+                        <i class="fa-solid fa-check-circle text-amber-500 mr-1"></i> Performa Wisata
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. MAIN CONTENT (TAB & FORM) -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden min-h-[600px]">
+                
+                <!-- Tab Navigasi Responsive -->
+                <!-- Mobile: Grid 2 kolom, Desktop: Flex -->
+                <div class="grid grid-cols-2 md:flex border-b border-slate-200 bg-slate-50/50">
+                    <button id="tab-mgr-edit" class="px-4 py-4 md:px-8 md:py-5 text-xs md:text-sm font-bold text-sky-600 border-b-2 border-sky-600 bg-white transition-all duration-200 flex flex-col md:flex-row items-center justify-center gap-2 active-tab">
+                        <i class="fa-solid fa-pen-to-square text-lg md:text-sm"></i> <span>Kelola Destinasi</span>
+                    </button>
+                    <button id="tab-mgr-reviews" class="px-4 py-4 md:px-8 md:py-5 text-xs md:text-sm font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 hover:bg-slate-50 transition-all duration-200 flex flex-col md:flex-row items-center justify-center gap-2">
+                        <i class="fa-solid fa-message text-lg md:text-sm"></i> <span>Ulasan Masuk</span>
+                    </button>
+                </div>
+
+                <div class="p-5 md:p-10">
                     
-                    <!-- 2. DESKRIPSI (Desktop: Kiri, Mobile: Urutan ke-2) -->
-                    <div class="lg:col-span-2">
-                        <h3 class="font-bold text-slate-800 mb-2 border-b pb-2">Tentang Destinasi</h3>
-                        <p id="detail-desc" class="text-sm md:text-base text-slate-600 leading-relaxed whitespace-pre-line mb-6">...</p>
+                    <!-- KONTEN 1: FORM EDIT -->
+                    <div id="mgr-content-edit">
+                        <form id="form-update-dest" class="space-y-6 md:space-y-8">
+                            
+                            <!-- Bagian 1: Foto & Upload -->
+                            <div class="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-200">
+                                <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs"><i class="fa-solid fa-image"></i></span> 
+                                    Visual Destinasi
+                                </h4>
+                                <div class="flex flex-col lg:flex-row gap-6">
+                                    <!-- Preview Image -->
+                                    <div class="w-full lg:w-1/3 aspect-video bg-white rounded-xl border-2 border-dashed border-slate-300 flex items-center justify-center overflow-hidden relative group">
+                                        <img id="preview-current-img" src="" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300x200?text=Preview+Foto'">
+                                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                            <span class="text-white text-xs font-bold">Preview Saat Ini</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Upload Control -->
+                                    <div class="flex-1 flex flex-col justify-center">
+                                        <label class="block text-xs md:text-sm font-medium text-slate-700 mb-2">Upload Foto Baru</label>
+                                        <input type="file" id="edit-dest-file" accept="image/*" 
+                                            class="block w-full text-xs md:text-sm text-slate-500
+                                            file:mr-4 file:py-2.5 file:px-4
+                                            file:rounded-full file:border-0
+                                            file:text-[10px] md:file:text-xs file:font-bold
+                                            file:bg-indigo-50 file:text-indigo-700
+                                            hover:file:bg-indigo-100
+                                            transition-all cursor-pointer border border-slate-200 rounded-lg bg-white p-1
+                                          "/>
+                                        <p class="text-[10px] md:text-[11px] text-slate-400 mt-2 flex items-start gap-1">
+                                            <i class="fa-solid fa-circle-info mt-0.5"></i> <span>Format: JPG/PNG. Max: 1MB. Disarankan Landscape.</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bagian 2: Informasi Utama -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Nama Wisata</label>
+                                    <input type="text" id="edit-dest-name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 outline-none transition font-medium text-slate-700 text-sm md:text-base" placeholder="Contoh: Danau Sipin">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Kategori</label>
+                                    <div class="relative">
+                                        <select id="edit-dest-category" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 outline-none transition font-medium text-slate-700 appearance-none bg-white cursor-pointer text-sm md:text-base">
+                                            <option value="Alam">🌲 Wisata Alam</option>
+                                            <option value="Kuliner">🍽️ Wisata Kuliner</option>
+                                            <option value="Sejarah">🏛️ Sejarah & Budaya</option>
+                                            <option value="Rekreasi">🎡 Taman Rekreasi</option>
+                                        </select>
+                                        <i class="fa-solid fa-chevron-down absolute right-4 top-4 text-xs text-slate-400 pointer-events-none"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bagian 3: Lokasi (Koordinat) - Responsif Grid -->
+                            <div class="bg-indigo-50/50 p-4 md:p-6 rounded-2xl border border-indigo-100">
+                                <h4 class="text-sm font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-map-location-dot text-indigo-500"></i> Koordinat Peta (Google Maps)
+                                </h4>
+                                <!-- Di Mobile jadi 1 kolom, Tablet/Desktop 2 kolom -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-1">Latitude</label>
+                                        <input type="text" id="edit-dest-lat" placeholder="-1.610..." class="w-full px-4 py-2.5 rounded-lg border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm text-slate-700 font-mono">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-indigo-400 uppercase mb-1">Longitude</label>
+                                        <input type="text" id="edit-dest-lng" placeholder="103.61..." class="w-full px-4 py-2.5 rounded-lg border border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none text-sm text-slate-700 font-mono">
+                                    </div>
+                                </div>
+                                <div class="mt-3 flex items-start gap-2 text-[10px] md:text-xs text-indigo-600 bg-white p-2.5 rounded-lg border border-indigo-100/50 leading-relaxed">
+                                    <i class="fa-solid fa-lightbulb mt-0.5 text-amber-400 shrink-0"></i>
+                                    <span><b>Tips:</b> Buka Google Maps, klik kanan lokasi wisata, lalu klik angka koordinat untuk menyalinnya.</span>
+                                </div>
+                            </div>
+
+                            <!-- Bagian 4: Deskripsi -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Deskripsi Lengkap</label>
+                                <textarea id="edit-dest-desc" rows="6" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 outline-none transition text-sm text-slate-700 leading-relaxed placeholder:text-slate-400" placeholder="Jelaskan keunikan, fasilitas, dan daya tarik wisata Anda..."></textarea>
+                            </div>
+
+                            <!-- Tombol Simpan -->
+                            <div class="pt-6 border-t border-slate-100 flex justify-end">
+                                <button type="submit" class="w-full sm:w-auto bg-gradient-to-r from-sky-600 to-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-sky-200 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
-                    <!-- 3. SIDEBAR INFO PENGELOLA (Desktop: Kanan, Mobile: Urutan ke-3) -->
-                    <!-- Perhatikan urutan HTML ini. Di HP dia akan muncul SETELAH deskripsi, tapi SEBELUM ulasan -->
-                    <div class="h-fit space-y-4 lg:col-span-1 lg:row-span-2">
-                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
-                            <h4 class="font-bold text-slate-800 mb-3 text-sm">Info Kontak</h4>
-                            <p class="text-sm text-slate-600 mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-phone w-4 text-center text-slate-400"></i> 
-                                <span id="detail-contact">-</span>
-                            </p>
-                            <p class="text-sm text-slate-600 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-map w-4 text-center text-slate-400"></i>
-                                <a id="detail-map-link" href="#" target="_blank" class="text-sky-600 hover:underline truncate">Google Maps</a>
-                            </p>
+                    <!-- KONTEN 2: ULASAN MASUK -->
+                    <div id="mgr-content-reviews" class="hidden space-y-6">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
+                            <h3 class="font-bold text-slate-700">Daftar Ulasan Pengunjung</h3>
+                            <span class="text-xs bg-slate-100 text-slate-500 px-3 py-1 rounded-full font-bold">Terbaru</span>
+                        </div>
+                        
+                        <!-- Container List Ulasan -->
+                        <div id="mgr-reviews-list" class="space-y-4">
+                            <!-- Diisi oleh Javascript -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 6: DETAIL WISATA (MOBILE: URUT, DESKTOP: GRID) -->
+        <section id="view-detail" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- Navigasi Kembali -->
+            <div class="mb-8">
+                <button id="btn-back-home" class="group flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors duration-300">
+                    <span class="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center shadow-sm group-hover:border-indigo-200 group-hover:bg-indigo-50 transition-all">
+                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-0.5 transition-transform"></i>
+                    </span>
+                    Kembali ke Beranda
+                </button>
+            </div>
+
+            <!-- GRID UTAMA: Flattened Grid agar bisa diatur urutannya (Order) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- 1. HERO IMAGE (Urutan 1 di HP, Kiri di Desktop) -->
+                <div class="lg:col-span-8 order-1 w-full">
+                    <div class="bg-white rounded-3xl p-1.5 shadow-xl shadow-slate-200/50 border border-slate-100">
+                        <div class="relative h-[300px] md:h-[500px] w-full rounded-2xl overflow-hidden group">
+                            <img id="detail-img" src="" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Wisata" onerror="this.src='https://via.placeholder.com/800x400?text=Foto+Tidak+Tersedia'">
                             
-                            <!-- PETA IFRAME -->
-                            <div class="w-full h-40 rounded-lg overflow-hidden bg-slate-200 relative border border-slate-300">
-                                <iframe id="detail-map-frame" class="w-full h-full" style="border:0;" loading="lazy"></iframe>
-                                <div id="map-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs text-center p-2 hidden">
-                                    Peta tidak tersedia
+                            <!-- Overlay Gradient -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/30 to-transparent"></div>
+                            
+                            <!-- Header Info -->
+                            <div class="absolute bottom-0 left-0 w-full p-6 md:p-8">
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    <span id="detail-category" class="px-3 py-1 bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-sm">
+                                        Kategori
+                                    </span>
+                                    <span class="px-3 py-1 bg-emerald-500/90 backdrop-blur-md text-white text-xs font-bold rounded-full shadow-sm flex items-center gap-1">
+                                        <i class="fa-solid fa-check-circle text-[10px]"></i> Terverifikasi
+                                    </span>
+                                </div>
+                                <h1 id="detail-title" class="text-2xl md:text-5xl font-extrabold text-white mb-2 leading-tight tracking-tight drop-shadow-md">
+                                    Nama Destinasi
+                                </h1>
+                                <div class="flex items-center text-slate-200 text-sm font-medium gap-2 opacity-90">
+                                    <i class="fa-solid fa-location-dot text-red-400 shrink-0"></i>
+                                    <span id="detail-address" class="line-clamp-1">Alamat memuat...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. DESKRIPSI (Urutan 2 di HP, Kiri di Desktop) -->
+                <div class="lg:col-span-8 order-2 bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-slate-100">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-align-left"></i>
+                        </span>
+                        Tentang Destinasi
+                    </h3>
+                    <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed text-justify text-sm md:text-base">
+                        <p id="detail-desc" class="whitespace-pre-line">Memuat deskripsi...</p>
+                    </div>
+                </div>
+
+                <!-- 3. SIDEBAR (RATING, MAPS, KONTAK) -->
+                <!-- Urutan 3 di HP, Kanan Sticky di Desktop -->
+                <!-- lg:row-span-3 agar tingginya mengikuti konten kiri di mode desktop -->
+                <div class="lg:col-span-4 order-3 lg:col-start-9 lg:row-start-1 lg:row-span-3 space-y-6">
+                    <div class="lg:sticky lg:top-28 space-y-6">
+                        
+                        <!-- A. Rating Card -->
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 text-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-b from-slate-50/80 to-transparent"></div>
+                            <div class="relative z-10">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Rating & Performa</p>
+                                <div class="flex items-baseline justify-center gap-1 mb-2">
+                                    <span id="detail-avg-rating" class="text-6xl md:text-7xl font-black text-slate-800 tracking-tighter">0.0</span>
+                                    <span class="text-xl text-slate-400 font-bold">/5</span>
+                                </div>
+                                <div class="flex justify-center gap-1 text-amber-400 mb-5 text-lg">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                </div>
+                                <div class="bg-slate-100 rounded-xl py-3 px-4 text-sm font-medium text-slate-600 inline-block border border-slate-200">
+                                    Berdasarkan <span id="detail-total-reviews" class="text-indigo-600 font-bold">0 Ulasan</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-white p-5 rounded-xl border border-slate-100 text-center shadow-sm">
-                            <div class="text-4xl font-bold text-slate-800" id="detail-avg-rating">0.0</div>
-                            <div class="text-xs text-slate-500 uppercase mt-1" id="detail-total-reviews">0 Ulasan</div>
-                        </div>
-                    </div>
-
-                    <!-- 4. ULASAN (Desktop: Kiri Bawah, Mobile: Urutan ke-4) -->
-                    <div class="lg:col-span-2">
-                        <h3 class="font-bold text-slate-800 mb-4">Ulasan & Rating</h3>
-                        
-                        <!-- Form Tulis Ulasan -->
-                        <div id="review-form-container" class="bg-slate-50 p-4 rounded-xl mb-6 hidden border border-slate-200">
-                            <form id="form-review">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-xs font-bold text-slate-600">Rating:</span>
-                                    <select id="review-rating" class="border rounded px-2 py-1 text-sm bg-white">
-                                        <option value="5">⭐⭐⭐⭐⭐</option>
-                                        <option value="4">⭐⭐⭐⭐</option>
-                                        <option value="3">⭐⭐⭐</option>
-                                        <option value="2">⭐⭐</option>
-                                        <option value="1">⭐</option>
-                                    </select>
+                        <!-- B. Info Kontak & Peta -->
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-5 flex items-center gap-3 pb-4 border-b border-slate-50">
+                                <span class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </span>
+                                Info Kontak
+                            </h4>
+                            
+                            <div class="space-y-6">
+                                
+                                <!-- Peta (FIXED: WARNA NORMAL) -->
+                                <div>
+                                    <div class="flex justify-between items-end mb-2 px-1">
+                                        <p class="text-[10px] text-slate-400 font-bold uppercase">Lokasi Peta</p>
+                                        <a id="detail-map-link" href="#" target="_blank" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline flex items-center gap-1 transition">
+                                            Buka di Maps <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                        </a>
+                                    </div>
+                                    <div class="w-full aspect-square rounded-2xl overflow-hidden bg-slate-100 relative group border border-slate-200 shadow-inner">
+                                        <iframe id="detail-map-frame" class="w-full h-full" style="border:0;" loading="lazy"></iframe>
+                                        <div id="map-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 text-xs text-center p-4 pointer-events-none">
+                                            <i class="fa-solid fa-map-location-dot text-3xl mb-2 opacity-30"></i>
+                                            <span>Peta belum tersedia</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <textarea id="review-text" rows="3" placeholder="Bagikan pengalamanmu..." class="w-full border rounded-lg p-2 text-sm mb-2 focus:ring-1 focus:ring-sky-500 outline-none"></textarea>
-                                <button type="submit" class="bg-sky-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-sky-700">Kirim Ulasan</button>
-                            </form>
-                        </div>
-                        <div id="login-to-review" class="bg-yellow-50 p-4 rounded-lg text-yellow-800 text-xs mb-6 hidden text-center border border-yellow-100">
-                            Silahkan <a href="#" onclick="window.navigate('login')" class="font-bold underline">Login</a> untuk menulis ulasan.
-                        </div>
 
-                        <!-- List Ulasan -->
-                        <div id="public-reviews-list" class="space-y-4"></div>
+                                <!-- Telepon -->
+                                <div class="group">
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase mb-1.5 ml-1">Nomor Telepon / WA</p>
+                                    <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-xl border border-slate-100 group-hover:border-indigo-100 group-hover:bg-indigo-50/30 transition-all">
+                                        <span id="detail-contact" class="text-sm font-bold text-slate-700 font-mono tracking-tight">-</span>
+                                        <div class="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center shadow-sm">
+                                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. ULASAN (Urutan 4 di HP, Kiri di Desktop) -->
+                <div class="lg:col-span-8 order-4 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-comments text-amber-500"></i>
+                            Ulasan Pengunjung
+                        </h3>
                     </div>
 
+                    <!-- Form Review -->
+                    <div id="review-form-container" class="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-3xl border border-indigo-100 shadow-sm hidden relative overflow-hidden group hover:border-indigo-200 transition-colors">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-100/50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                        
+                        <form id="form-review" class="relative z-10">
+                            <label class="block text-sm font-bold text-slate-700 mb-3">Bagikan pengalaman Anda</label>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <select id="review-rating" class="bg-white border border-slate-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none p-3 font-bold min-w-[150px] cursor-pointer shadow-sm">
+                                    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                                    <option value="4">⭐⭐⭐⭐ (4)</option>
+                                    <option value="3">⭐⭐⭐ (3)</option>
+                                    <option value="2">⭐⭐ (2)</option>
+                                    <option value="1">⭐ (1)</option>
+                                </select>
+                                <input type="text" id="review-text" placeholder="Tulis ulasan singkat..." class="flex-grow bg-white border border-slate-200 text-slate-700 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none p-3 shadow-sm transition-all placeholder:text-slate-400">
+                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-indigo-200 transition-transform active:scale-95 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> <span class="hidden sm:inline">Kirim</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Pesan Login untuk Review -->
+                    <div id="login-to-review" class="bg-amber-50 border border-amber-100 p-6 rounded-2xl text-center hidden">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-amber-100 text-amber-600 rounded-full mb-3 shadow-sm">
+                            <i class="fa-solid fa-lock text-sm"></i>
+                        </div>
+                        <p class="text-amber-800 text-sm font-bold mb-3">Ingin menulis ulasan?</p>
+                        <button onclick="window.navigate('login')" class="text-xs bg-white border border-amber-200 text-amber-700 px-5 py-2.5 rounded-xl font-bold hover:bg-amber-50 transition shadow-sm">Login Sekarang</button>
+                    </div>
+
+                    <!-- List Ulasan -->
+                    <div id="public-reviews-list" class="grid gap-4">
+                        <!-- Diisi oleh Javascript -->
+                    </div>
                 </div>
+
             </div>
         </section>
 
@@ -689,72 +1000,163 @@
             </div>
         </div>
 
-        <!-- VIEW 7: PROFIL PENGGUNA (BARU) -->
-<section id="view-profile" class="view-section hidden max-w-4xl mx-auto">
-    <div class="flex items-center mb-8">
-        <button onclick="window.navigate('home')" class="mr-4 text-slate-400 hover:text-slate-600 transition">
-            <i class="fa-solid fa-arrow-left text-xl"></i>
+<!-- VIEW 7: PROFIL PENGGUNA (LAYOUT PROFESIONAL & RESPONSIF) -->
+<section id="view-profile" class="view-section hidden max-w-6xl mx-auto">
+    
+    <!-- Header Navigasi -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center gap-4">
+        <button onclick="window.navigate('home')" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 hover:text-sky-600 hover:border-sky-200 transition shadow-sm group">
+            <i class="fa-solid fa-arrow-left group-hover:-translate-x-0.5 transition-transform"></i>
         </button>
-        <h2 class="text-2xl font-bold text-slate-800">Profil Saya</h2>
+        <div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Pengaturan Profil</h2>
+            <p class="text-slate-500 text-sm">Kelola informasi pribadi dan keamanan akun Anda.</p>
+        </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- KARTU KIRI: FOTO & RINGKASAN -->
-        <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 text-center h-fit">
-            <div class="relative w-32 h-32 mx-auto mb-4 group cursor-pointer">
-                <img id="profile-img-preview" src="https://ui-avatars.com/api/?name=User" class="w-full h-full rounded-full object-cover border-4 border-slate-100 shadow-sm">
-                <!-- Overlay Ubah Foto -->
-                <div onclick="document.getElementById('profile-file-input').click()" class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
-                    <i class="fa-solid fa-camera text-white text-2xl"></i>
+    <!-- Grid Layout: 1 Kolom di HP, 12 Kolom di Laptop (4:8 Split) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- SIDEBAR KIRI (KARTU PROFIL) -->
+        <div class="lg:col-span-4 space-y-6 lg:sticky lg:top-28">
+            
+            <!-- Kartu Profil Utama -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative group">
+                <!-- Background Cover Gradient -->
+                <div class="h-32 bg-gradient-to-r from-blue-600 to-indigo-800 relative">
+                    <div class="absolute inset-0 bg-white/10" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 20px 20px; opacity: 0.2;"></div>
+                </div>
+
+                <!-- Avatar & Info -->
+                <div class="px-6 pb-6 text-center relative">
+                    <!-- Wrapper Foto Profil -->
+                    <div class="relative w-28 h-28 mx-auto -mt-14 mb-4">
+                        <div class="w-full h-full rounded-full p-1 bg-white shadow-lg cursor-pointer relative overflow-hidden group-hover:shadow-xl transition-all duration-300">
+                            <img id="profile-img-preview" src="https://ui-avatars.com/api/?name=User" class="w-full h-full rounded-full object-cover bg-slate-100">
+                            
+                            <!-- Overlay Upload (Desktop Hover) -->
+                            <div onclick="document.getElementById('profile-file-input').click()" 
+                                 class="absolute inset-0 m-1 rounded-full bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition duration-200 cursor-pointer text-white backdrop-blur-[2px]">
+                                <i class="fa-solid fa-camera text-xl mb-1"></i>
+                                <span class="text-[10px] font-medium uppercase tracking-wide">Ubah</span>
+                            </div>
+                        </div>
+                        <!-- Tombol Edit Floating (Khusus Mobile) -->
+                        <button onclick="document.getElementById('profile-file-input').click()" class="absolute bottom-0 right-0 bg-indigo-600 text-white w-8 h-8 rounded-full border-2 border-white shadow-md flex items-center justify-center active:scale-90 transition lg:hidden">
+                            <i class="fa-solid fa-camera text-xs"></i>
+                        </button>
+                    </div>
+
+                    <h3 id="profile-name-display" class="text-xl font-bold text-slate-800 mb-1">Nama Pengguna</h3>
+                    <div id="profile-role-display" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200 shadow-sm mt-1">
+                        User
+                    </div>
+                </div>
+
+                <!-- Statistik Mini -->
+                <div class="border-t border-slate-100 px-6 py-4 bg-slate-50/50">
+                    <div class="flex justify-between items-center text-sm mb-3">
+                        <span class="text-slate-500">Status Akun</span>
+                        <span id="profile-status-display" class="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 uppercase text-[10px] tracking-wider">Active</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-500">Bergabung Sejak</span>
+                        <span id="profile-join-date" class="font-medium text-slate-700 font-mono text-xs">-</span>
+                    </div>
                 </div>
             </div>
-            <h3 id="profile-name-display" class="text-xl font-bold text-slate-800">Nama User</h3>
-            <span id="profile-role-display" class="text-xs font-bold px-3 py-1 bg-sky-100 text-sky-600 rounded-full mt-2 inline-block capitalize">User</span>
-            
-            <div class="mt-6 border-t border-slate-100 pt-4 text-left space-y-3">
-                <div class="flex justify-between text-sm">
-                    <span class="text-slate-500">Bergabung</span>
-                    <span id="profile-join-date" class="font-medium text-slate-700">-</span>
-                </div>
-                <div class="flex justify-between text-sm">
-                    <span class="text-slate-500">Status</span>
-                    <span id="profile-status-display" class="font-bold text-green-600">Active</span>
+
+            <!-- Tips Keamanan (Hanya Tampil di Desktop) -->
+            <div class="bg-blue-50 rounded-xl p-5 border border-blue-100 hidden lg:block">
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-shield-halved text-blue-500 mt-1"></i>
+                    <div>
+                        <h4 class="text-sm font-bold text-blue-800 mb-1">Info Profil</h4>
+                        <p class="text-xs text-blue-600 leading-relaxed">Gunakan nama asli dan foto yang jelas agar profil Anda terlihat lebih profesional dan terpercaya.</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- KARTU KANAN: FORM EDIT -->
-        <div class="md:col-span-2 bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
-            <h3 class="font-bold text-lg text-slate-800 mb-6 border-b border-slate-100 pb-2">Edit Informasi</h3>
-            
-            <form id="form-update-profile">
-                <!-- Input File Tersembunyi -->
-                <input type="file" id="profile-file-input" accept="image/*" class="hidden">
+        <!-- KOLOM KANAN (FORM EDIT) -->
+        <div class="lg:col-span-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 relative">
+                
+                <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                            <i class="fa-solid fa-user-pen text-sm"></i>
+                        </span>
+                        Edit Informasi
+                    </h3>
+                </div>
 
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">Email (Tidak dapat diubah)</label>
-                        <input type="email" id="profile-email" disabled class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-500 cursor-not-allowed">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
-                        <input type="text" id="profile-name" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 outline-none transition">
-                    </div>
+                <form id="form-update-profile" class="space-y-6">
+                    <input type="file" id="profile-file-input" accept="image/*" class="hidden">
 
-                    <div id="manager-info-only" class="hidden space-y-5">
-                        <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100 text-sm text-indigo-800">
-                            <i class="fa-solid fa-info-circle mr-1"></i> Info Wisata Anda bisa diedit di Dashboard Pengelola.
+                    <!-- Grid Layout untuk Input -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Input Nama -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Nama Lengkap</label>
+                            <div class="relative group">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i class="fa-regular fa-user text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                                </div>
+                                <input type="text" id="profile-name" required 
+                                    class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none font-medium text-slate-700 placeholder:text-slate-400"
+                                    placeholder="Masukkan nama lengkap">
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1.5 ml-1">Nama ini akan ditampilkan pada ulasan dan halaman publik.</p>
+                        </div>
+
+                        <!-- Input Email (Read Only) -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-bold text-slate-500 mb-2 ml-1 flex justify-between">
+                                Email
+                                <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded border border-slate-200 font-normal">Tidak dapat diubah</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <i class="fa-regular fa-envelope text-slate-400"></i>
+                                </div>
+                                <input type="email" id="profile-email" disabled 
+                                    class="w-full pl-11 pr-10 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 font-medium cursor-not-allowed select-none">
+                                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-lock text-xs"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="pt-4 flex justify-end">
-                        <button type="submit" class="bg-sky-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-sky-700 shadow-md transition transform hover:-translate-y-0.5">
-                            Simpan Perubahan
+                    <!-- Pesan Khusus Manager -->
+                    <div id="manager-info-only" class="hidden mt-4">
+                        <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-full bg-white border border-indigo-100 flex items-center justify-center shrink-0 text-indigo-600 shadow-sm">
+                                <i class="fa-solid fa-shop"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-indigo-800 mb-1">Akun Pengelola Wisata</h4>
+                                <p class="text-xs text-indigo-600 leading-relaxed">
+                                    Ingin mengubah data tempat wisata (Foto, Lokasi, Deskripsi)? <br>
+                                    Silakan akses menu <button type="button" onclick="window.navigate('manager')" class="underline hover:text-indigo-900 font-bold cursor-pointer">Dashboard Pengelola</button>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="pt-6 mt-6 border-t border-slate-100 flex flex-col-reverse md:flex-row justify-end gap-3">
+                        <button type="button" onclick="window.navigate('home')" class="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition text-sm border border-transparent hover:border-slate-200">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-8 py-3 rounded-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all duration-200 text-sm flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-floppy-disk"></i> Simpan Perubahan
                         </button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </section>
@@ -949,27 +1351,80 @@
 
     </main>
 
-    <!-- Footer -->
-<footer class="fixed bottom-0 left-0 w-full z-50 font-poppins bg-gradient-to-r from-blue-700 to-indigo-900 border-t border-white/10 shadow-[0_-4px_20px_-4px_rgba(17,24,39,0.5)] transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-14"> <!-- Tinggi footer h-14 (56px) -->
-            
-            <!-- Copyright Teks Disesuaikan ke Putih -->
-            <p class="text-xs md:text-sm font-bold text-white/90 tracking-wide flex items-center gap-1">
-                © 2025 <span class="text-xs md:text-sm font-bold text-white/90 tracking-wide flex items-center gap-1">Zuvo.</span>
+    <footer class="fixed bottom-0 left-0 w-full z-50 font-poppins bg-gradient-to-r from-blue-700 to-indigo-900 border-t border-white/10 shadow-[0_-4px_20px_-4px_rgba(17,24,39,0.5)] transition-all duration-300">
+    <!-- Tambahkan class 'relative' agar slogan bisa diposisikan absolute di tengah -->
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-14 relative"> 
+        
+        <!-- 1. KIRI: Copyright -->
+        <p class="text-xs md:text-sm font-bold text-white/90 tracking-wide flex items-center gap-1 z-10">
+            © 2025 <span class="font-extrabold text-sky-200">Zuvo.</span>
+        </p>
+
+        <!-- 2. TENGAH: Slogan (Hanya Muncul di Desktop) -->
+        <!-- Absolute Center agar pas di tengah dan tidak mendorong elemen lain -->
+        <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2">
+            <p class="text-[10px] lg:text-xs text-blue-200/70 font-medium tracking-[0.3em] uppercase select-none">
+                Jelajahi Keindahan Jambi
             </p>
-
-            <!-- Tombol Panduan (Disesuaikan ke tema gelap) -->
-            <button onclick="window.navigate('docs')" class="text-xs md:text-sm font-bold text-blue-100 hover:text-white transition flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-full border border-white/20 hover:border-white/30 shadow-sm cursor-pointer group">
-                <i class="fa-solid fa-circle-question text-lg group-hover:rotate-12 transition-transform"></i> 
-                <span>Panduan Pengguna</span>
-            </button>
         </div>
-    </footer>
 
-    <!-- Toast Notification -->
+        <!-- 3. KANAN: Tombol Panduan (Teks Tetap Muncul Utuh) -->
+        <button onclick="window.navigate('docs')" class="z-10 text-[10px] md:text-sm font-bold text-blue-100 hover:text-white transition flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-1.5 md:px-4 md:py-1.5 rounded-full border border-white/20 hover:border-white/30 shadow-sm cursor-pointer group">
+            <i class="fa-solid fa-circle-question text-base group-hover:rotate-12 transition-transform"></i> 
+            <!-- Teks dibiarkan utuh sesuai permintaan -->
+            <span>Panduan Pengguna</span>
+        </button>
+    </div>
+</footer>
+
+    <!-- TOAST NOTIFICATION (Sudah ada, biarkan) -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-xl transform translate-y-40 transition-transform duration-300 z-50 flex items-center">
         <i id="toast-icon" class="fa-solid fa-check-circle text-green-400 mr-3"></i>
         <span id="toast-msg">Notifikasi</span>
+    </div>
+
+    <!-- [BARU] CUSTOM MODAL (Pengganti Alert & Confirm Browser) -->
+    <!-- Letakkan kode ini tepat DI ATAS tag <script> -->
+    <div id="custom-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <!-- Backdrop Gelap (Blur) -->
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] transition-opacity duration-300 opacity-0" id="modal-backdrop"></div>
+
+        <!-- Kotak Modal -->
+        <div class="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 border border-white/20" id="modal-box">
+            
+            <!-- Hiasan Header -->
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-20"></div>
+
+            <div class="p-6 text-center">
+                <!-- Ikon Dinamis -->
+                <div id="modal-icon-container" class="mx-auto flex items-center justify-center w-16 h-16 rounded-full bg-indigo-50 mb-5 shadow-sm border-4 border-white ring-1 ring-slate-100 transform transition-transform duration-500">
+                    <i id="modal-icon" class="fa-solid fa-bell text-2xl text-indigo-500"></i>
+                </div>
+
+                <!-- Konten Teks -->
+                <h3 id="modal-title" class="text-xl font-extrabold text-slate-800 mb-2 tracking-tight">Judul</h3>
+                <p id="modal-message" class="text-sm text-slate-500 leading-relaxed mb-6 font-medium">
+                    Pesan konfirmasi akan muncul disini.
+                </p>
+
+                <!-- Tombol Aksi (Untuk Confirm) -->
+                <div class="grid grid-cols-2 gap-3 hidden" id="modal-buttons-confirm">
+                    <button id="btn-modal-cancel" class="py-2.5 px-4 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 hover:text-slate-800 transition active:scale-95">
+                        Batal
+                    </button>
+                    <button id="btn-modal-confirm" class="py-2.5 px-4 rounded-xl bg-indigo-600 text-white font-bold text-sm hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition active:scale-95 flex items-center justify-center gap-2">
+                        Ya, Lanjutkan
+                    </button>
+                </div>
+
+                <!-- Tombol Tunggal (Untuk Alert) -->
+                <div class="hidden" id="modal-buttons-alert">
+                    <button id="btn-modal-ok" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 text-white font-bold text-sm hover:bg-slate-900 shadow-lg transition active:scale-95">
+                        Mengerti
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Link ke JS Utama (Type Module agar bisa import) -->
