@@ -17,7 +17,7 @@ import {
 // ... (Kode Import Firebase biarkan di atas sini) ...
 
 // ============================================================
-// --- 0. SISTEM MODAL CUSTOM (WAJIB ADA DI SINI) ---
+// --- 0. SISTEM MODAL CUSTOM (FIXED SESUAI HTML LAMA) ---
 // ============================================================
 
 const modalEl = document.getElementById('custom-modal');
@@ -25,8 +25,11 @@ const modalBackdrop = document.getElementById('modal-backdrop');
 const modalBox = document.getElementById('modal-box');
 const modalTitle = document.getElementById('modal-title');
 const modalMsg = document.getElementById('modal-message');
-const modalIconContainer = document.getElementById('modal-icon-container');
+
+// INI YANG DIPERBAIKI: ID-nya disesuaikan dengan HTML lama kamu
+const modalIconContainer = document.getElementById('modal-icon-container'); 
 const modalIcon = document.getElementById('modal-icon');
+
 const btnsConfirm = document.getElementById('modal-buttons-confirm');
 const btnsAlert = document.getElementById('modal-buttons-alert');
 const btnCancel = document.getElementById('btn-modal-cancel');
@@ -35,12 +38,8 @@ const btnOk = document.getElementById('btn-modal-ok');
 
 // Helper Animasi
 function openModalAnimation() {
-    if(!modalEl) {
-        console.error("Modal HTML tidak ditemukan! Pastikan kode modal ada di index.html");
-        return;
-    }
+    if(!modalEl) return;
     modalEl.classList.remove('hidden');
-    // Timeout agar transisi CSS berjalan smooth
     setTimeout(() => {
         modalBackdrop.classList.remove('opacity-0');
         modalBox.classList.remove('scale-95', 'opacity-0');
@@ -58,14 +57,14 @@ function closeModalAnimation() {
     }, 300);
 }
 
-// FUNGSI 1: CUSTOM CONFIRM (Mengembalikan Promise True/False)
+// --- FUNGSI 1: CUSTOM CONFIRM (HAPUS/LOGOUT) ---
 window.customConfirm = (title, message, type = 'primary') => {
     return new Promise((resolve) => {
-        // Reset Style
+        // Reset Style Default
         modalIconContainer.className = 'mx-auto flex items-center justify-center w-16 h-16 rounded-full mb-5 shadow-sm border-4 border-white ring-1 ring-slate-100 transform transition-all';
         btnConfirm.className = 'py-2.5 px-4 rounded-xl font-bold text-sm shadow-lg transition active:scale-95 flex items-center justify-center gap-2 text-white';
         
-        // Atur Warna & Icon berdasarkan Tipe
+        // Atur Warna & Icon
         if (type === 'danger') {
             modalIconContainer.classList.add('bg-red-50');
             modalIcon.className = 'fa-solid fa-trash-can text-2xl text-red-500';
@@ -82,25 +81,21 @@ window.customConfirm = (title, message, type = 'primary') => {
             btnConfirm.classList.add('bg-slate-700', 'hover:bg-slate-800', 'shadow-slate-300');
             btnConfirm.innerHTML = 'Keluar';
         } else {
-            // Default (Info/Primary)
             modalIconContainer.classList.add('bg-indigo-50');
             modalIcon.className = 'fa-solid fa-circle-question text-2xl text-indigo-500';
             btnConfirm.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'shadow-indigo-200');
             btnConfirm.innerHTML = 'Ya, Lanjutkan';
         }
 
-        // Isi Konten
         modalTitle.innerText = title;
-        modalMsg.innerHTML = message; // Support HTML tag
+        modalMsg.innerHTML = message;
 
-        // Tampilkan Tombol Confirm, Sembunyikan Alert
         btnsConfirm.classList.remove('hidden');
         btnsAlert.classList.add('hidden');
 
-        // Buka
         openModalAnimation();
 
-        // Handle Klik (One-time event)
+        // One-time listener dengan cleanup yang benar
         const handleConfirm = () => { cleanup(); closeModalAnimation(); resolve(true); };
         const handleCancel = () => { cleanup(); closeModalAnimation(); resolve(false); };
 
@@ -114,25 +109,30 @@ window.customConfirm = (title, message, type = 'primary') => {
     });
 };
 
-// FUNGSI 2: CUSTOM ALERT (Hanya Tombol OK)
+// --- FUNGSI 2: CUSTOM ALERT (PESAN SUKSES/GAGAL) ---
 window.customAlert = (title, message, type = 'success') => {
     return new Promise((resolve) => {
-        if(!modalEl) { alert(message); resolve(true); return; } // Fallback jika HTML modal hilang
-
+        // Reset Style
         modalIconContainer.className = 'mx-auto flex items-center justify-center w-16 h-16 rounded-full mb-5 shadow-sm border-4 border-white ring-1 ring-slate-100';
-        
+        btnOk.className = 'w-full py-2.5 px-4 rounded-xl font-bold text-sm shadow-lg transition active:scale-95 text-white';
+
+        // Atur Warna
         if (type === 'success') {
             modalIconContainer.classList.add('bg-emerald-50');
             modalIcon.className = 'fa-solid fa-circle-check text-3xl text-emerald-500';
+            btnOk.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'shadow-emerald-200');
         } else if (type === 'error') {
             modalIconContainer.classList.add('bg-red-50');
             modalIcon.className = 'fa-solid fa-circle-xmark text-3xl text-red-500';
-        } else if (type === 'warning') {
-            modalIconContainer.classList.add('bg-amber-50');
-            modalIcon.className = 'fa-solid fa-triangle-exclamation text-3xl text-amber-500';
+            btnOk.classList.add('bg-slate-800', 'hover:bg-slate-900', 'shadow-slate-400');
+        } else if (type === 'block') { // KHUSUS TAMPILAN BLOKIR (MERAH)
+            modalIconContainer.classList.add('bg-red-50');
+            modalIcon.className = 'fa-solid fa-ban text-3xl text-red-500';
+            btnOk.classList.add('bg-red-600', 'hover:bg-red-700', 'shadow-red-200');
         } else {
             modalIconContainer.classList.add('bg-blue-50');
             modalIcon.className = 'fa-solid fa-circle-info text-3xl text-blue-500';
+            btnOk.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'shadow-indigo-200');
         }
 
         modalTitle.innerText = title;
@@ -143,6 +143,7 @@ window.customAlert = (title, message, type = 'success') => {
 
         openModalAnimation();
 
+        // One-time listener
         btnOk.onclick = () => {
             closeModalAnimation();
             resolve(true);
@@ -242,7 +243,14 @@ onAuthStateChanged(auth, async (user) => {
             if (userData.status === 'blocked') {
                 await signOut(auth);
                 userData = null;
-                alert("AKSES DITOLAK: Akun Anda telah diblokir sementara oleh Admin.\nSilakan hubungi dukungan kami.");
+                
+                // GANTI DENGAN INI:
+                await window.customAlert(
+                    "Akses Ditolak", 
+                    "Akun Anda <b>telah diblokir</b> oleh Admin.<br>Silakan hubungi dukungan kami.", 
+                    "block" // Tipe block (Ikon Merah/Tanda Larang)
+                );
+                
                 window.navigate('login');
                 return;
             }
@@ -274,7 +282,12 @@ onAuthStateChanged(auth, async (user) => {
             // Jika akun sudah lama TAPI datanya tidak ada, baru dianggap DIHAPUS ADMIN
             await signOut(auth);
             userData = null;
-            alert("AKUN TIDAK DITEMUKAN: Akun Anda telah dihapus oleh Admin.");
+            await window.customAlert(
+                "Akun Tidak Ditemukan", 
+                "Maaf, akun Anda telah <b>dihapus oleh Admin</b> atau data profil tidak ditemukan.", 
+                "error" // Tipe error (Ikon Silang Merah)
+            );
+            
             window.navigate('login');
         }
     } else {
@@ -850,7 +863,12 @@ document.getElementById('form-register').addEventListener('submit', async (e) =>
 
         // Redirect / Pesan
         if(role === 'manager') {
-            alert("Akun berhasil dibuat! Mohon tunggu verifikasi Admin agar bisa login dan wisata Anda tampil.");
+            await window.customAlert(
+                "Pendaftaran Berhasil!", 
+                "Akun Anda berhasil dibuat.<br>Mohon tunggu <b>verifikasi Admin</b> agar bisa login dan wisata Anda tampil.", 
+                "success"
+            );
+            
             await signOut(auth);
             window.navigate('login');
         } else {
@@ -2154,7 +2172,13 @@ if (mgrInputFile) {
 // 2. LOAD DATA SAAT LOGIN
 async function loadManagerData() {
     if(userData.status !== 'active') {
-        alert("Akun belum aktif atau diblokir.");
+        // Hapus alert biasa, ganti dengan Custom Alert
+        await window.customAlert(
+            "Akses Dibatasi", 
+            "Akun Pengelola Anda masih dalam status <b>Pending</b>.<br>Silakan hubungi Admin untuk verifikasi.", 
+            "warning" // Pakai tipe warning (kuning) atau block (merah)
+        );
+        
         window.navigate('home');
         return;
     }
