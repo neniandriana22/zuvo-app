@@ -83,7 +83,7 @@ Berikut adalah tautan untuk mengakses aplikasi secara langsung atau melihat demo
 Berikut adalah tampilan antarmuka utama aplikasi ZUVO:
 Gambar 1: Talaman Beranda (Home)
 
-![alt text](img/Beranda.png)
+![alt text](public/img/Beranda.png)
 
 # Catatan: Pengguna baru dapat mendaftar melalui menu registrasi. Akun dengan role Manager memerlukan persetujuan Admin sebelum dapat beroperasi.
 
