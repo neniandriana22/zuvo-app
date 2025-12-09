@@ -14,7 +14,6 @@ import {
     deleteDoc, addDoc, query, where, arrayUnion, deleteField
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-// ... (Kode Import Firebase biarkan di atas sini) ...
 
 // ============================================================
 // --- 0. SISTEM MODAL CUSTOM (FIXED SESUAI HTML LAMA) ---
@@ -151,8 +150,6 @@ window.customAlert = (title, message, type = 'success') => {
     });
 };
 
-// ... (Lanjutkan dengan kode Auth Listener, Navigation, dll di bawahnya) ...
-
 // ============================================================
 // --- NAVBAR RESPONSIVE LOGIC (FIXED) ---
 // ============================================================
@@ -197,14 +194,8 @@ if (mobileBtn && navMenu) {
         }
     });
 }
-// ============================================================
-
-// ... (Lanjutkan dengan kode HELPER dan AUTH FUNCTIONS di bawahnya) ...
-
-// ============================================================
 
 // --- GLOBAL VARIABLES ---
-// --- HELPER: UBAH FOTO JADI TEKS (BASE64) ---
 // --- HELPER: UBAH FOTO JADI TEKS (BASE64) ---
 const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -224,9 +215,6 @@ const COLL_USERS = "users";
 const COLL_DESTINATIONS = "destinations";
 const COLL_REVIEWS = "reviews";
 
-// --- AUTH LISTENER (Cek Login) ---
-// --- AUTH LISTENER (Cek Login) ---
-// --- AUTH LISTENER (Cek Login & Status Blokir) ---
 // --- AUTH LISTENER (REVISI FINAL: Cek Login, Status Blokir & Anti-Crash Register) ---
 onAuthStateChanged(auth, async (user) => {
     currentUser = user;
@@ -365,7 +353,6 @@ if(btnLinkLogin) {
     });
 }
 
-// --- UI HELPERS ---
 // --- UI HELPERS ---
 function updateNavUI(isLoggedIn, name = '', role = '', photoURL = '') {
     const authMenu = document.getElementById('auth-menu');
@@ -666,7 +653,6 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     }
 });
 
-// ... (Kode selanjutnya)
 
 // --- FITUR LUPA PASSWORD ---
 
@@ -2049,9 +2035,6 @@ document.getElementById('form-update-profile').addEventListener('submit', async 
     }
 });
 
-// --- MANAGER LOGIC ---
-// 1. Event Listener untuk Preview Foto Instan (Saat pilih file dari komputer)
-// --- MANAGER LOGIC ---
 
 // 1. PREVIEW INSTAN: Saat pilih file dari folder laptop/HP
 // --- FUNGSI BARU: HAPUS BALASAN ---
@@ -2444,8 +2427,6 @@ document.querySelectorAll('#view-docs a[href^="#"]').forEach(anchor => {
         }
     });
 });
-
-// ... (Kode selanjutnya) ...
 
 // Tab Switching Manager
 const tabEdit = document.getElementById('tab-mgr-edit');
